@@ -1,0 +1,27 @@
+{
+  "name": "runescriptlanguage",
+  "displayName": "RuneScript Language Support",
+  "publisher": "2004scape",
+  "repository": "https://github.com/2004scape/RuneScriptLanguage",
+  "description": "Syntax highlighting and (eventually) intellisense for RuneScript.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.83.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "runescript",
+      "aliases": ["Runescript", "runescript"],
+      "extensions": [".rs",".rs2"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "runescript",
+      "scopeName": "source.rs",
+      "path": "./syntaxes/runescript.tmLanguage.json"
+    }]
+  }
+}

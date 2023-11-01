@@ -1,0 +1,75 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Runescript",
+  "patterns": [
+    {
+      "include": "#declarations"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#functions"
+    },
+    {
+      "include": "#variables"
+    },
+    {
+      "include": "#language-variables"
+    },
+    {
+      "include": "#strings"
+    }
+  ],
+  "repository": {
+    "language-variables": {
+      "patterns": [
+        {
+          "name": "variable.language",
+          "match": "\\b(def_(int|boolean|string|loc|npc|obj|coord|namedobj|player_uid|npc_uid|stat|component|interface|inv|enum|struct|param|dbtable|dbrow|dbcolumn|varp|mesanim))\\b"
+        }
+      ]
+    },
+    "declarations": {
+      "name": "entity.name.tag.runescript",
+      "begin": "\\[",
+      "end": "\\]"
+    },
+    "variables": {
+      "patterns": [
+        {
+          "name": "variable.other.runescript",
+          "match": "[\\^$%]\\w+"
+        }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "name": "entity.name.function.runescript",
+          "match": "[~@]\\w+"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.runescript",
+          "match": "\\b(if|while|for|return|else)\\b"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.runescript",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.runescript",
+          "match": "\\\\."
+        }
+      ]
+    }
+  },
+  "scopeName": "source.rs"
+}
