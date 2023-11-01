@@ -22,7 +22,8 @@
                 ],
                 "extensions": [
                     ".rs2"
-                ]
+                ],
+                "configuration": "./runescript.language-configuration.json"
             },
             {
                 "id": "confscript",
