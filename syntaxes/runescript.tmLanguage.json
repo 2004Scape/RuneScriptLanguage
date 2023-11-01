@@ -1,75 +1,104 @@
 {
-  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-  "name": "Runescript",
-  "patterns": [
-    {
-      "include": "#declarations"
-    },
-    {
-      "include": "#keywords"
-    },
-    {
-      "include": "#functions"
-    },
-    {
-      "include": "#variables"
-    },
-    {
-      "include": "#language-variables"
-    },
-    {
-      "include": "#strings"
-    }
-  ],
-  "repository": {
-    "language-variables": {
-      "patterns": [
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "RuneScript",
+    "patterns": [
         {
-          "name": "variable.language",
-          "match": "\\b(def_(int|boolean|string|loc|npc|obj|coord|namedobj|player_uid|npc_uid|stat|component|interface|inv|enum|struct|param|dbtable|dbrow|dbcolumn|varp|mesanim))\\b"
-        }
-      ]
-    },
-    "declarations": {
-      "name": "entity.name.tag.runescript",
-      "begin": "\\[",
-      "end": "\\]"
-    },
-    "variables": {
-      "patterns": [
+            "include": "#comments"
+        },
         {
-          "name": "variable.other.runescript",
-          "match": "[\\^$%]\\w+"
-        }
-      ]
-    },
-    "functions": {
-      "patterns": [
+            "include": "#language-variables"
+        },
         {
-          "name": "entity.name.function.runescript",
-          "match": "[~@]\\w+"
-        }
-      ]
-    },
-    "keywords": {
-      "patterns": [
+            "include": "#declarations"
+        },
         {
-          "name": "keyword.control.runescript",
-          "match": "\\b(if|while|for|return|else)\\b"
-        }
-      ]
-    },
-    "strings": {
-      "name": "string.quoted.double.runescript",
-      "begin": "\"",
-      "end": "\"",
-      "patterns": [
+            "include": "#variables"
+        },
         {
-          "name": "constant.character.escape.runescript",
-          "match": "\\\\."
+            "include": "#functions"
+        },
+        {
+            "include": "#keywords"
+        },
+        {
+            "include": "#strings"
         }
-      ]
-    }
-  },
-  "scopeName": "source.rs"
+    ],
+    "repository": {
+		"comments": {
+			"patterns": [
+				{
+					"begin": "(^[ \\t]+)?((//)(?:\\s*((@)internal)(?=\\s|$))?)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.whitespace.comment.leading.runescript"
+						},
+						"2": {
+							"name": "comment.line.double-slash.runescript"
+						},
+						"3": {
+							"name": "punctuation.definition.comment.runescript"
+						},
+						"4": {
+							"name": "storage.type.internaldeclaration.runescript"
+						},
+						"5": {
+							"name": "punctuation.decorator.internaldeclaration.runescript"
+						}
+					},
+					"end": "(?=$)",
+					"contentName": "comment.line.double-slash.runescript"
+				}
+			]
+		},
+        "language-variables": {
+            "patterns": [
+                {
+                    "name": "variable.language",
+                    "match": "\\b(def_(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable))\\b"
+                }
+            ]
+        },
+        "declarations": {
+            "name": "entity.name.tag.runescript",
+            "begin": "\\[",
+            "end": "\\]"
+        },
+        "variables": {
+            "patterns": [
+                {
+                    "name": "variable.other.runescript",
+                    "match": "[\\^$%]\\w+"
+                }
+            ]
+        },
+        "functions": {
+            "patterns": [
+                {
+                    "name": "entity.name.function.runescript",
+                    "match": "[~@]\\w+"
+                }
+            ]
+        },
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "keyword.control.runescript",
+                    "match": "\\b(if|while|for|return|else)\\b"
+                }
+            ]
+        },
+        "strings": {
+            "name": "string.quoted.double.runescript",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                {
+                    "name": "constant.character.escape.runescript",
+                    "match": "\\\\."
+                }
+            ]
+        }
+    },
+    "scopeName": "source.runescript"
 }

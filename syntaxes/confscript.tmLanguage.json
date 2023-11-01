@@ -1,0 +1,74 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "ConfScript",
+    "scopeName": "source.confscript",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#declarations"
+        },
+        {
+            "include": "#strings"
+        },
+        {
+            "include": "#properties"
+        }
+    ],
+    "repository": {
+		"comments": {
+			"patterns": [
+				{
+					"begin": "(^[ \\t]+)?((//)(?:\\s*((@)internal)(?=\\s|$))?)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.whitespace.comment.leading.runescript"
+						},
+						"2": {
+							"name": "comment.line.double-slash.runescript"
+						},
+						"3": {
+							"name": "punctuation.definition.comment.runescript"
+						},
+						"4": {
+							"name": "storage.type.internaldeclaration.runescript"
+						},
+						"5": {
+							"name": "punctuation.decorator.internaldeclaration.runescript"
+						}
+					},
+					"end": "(?=$)",
+					"contentName": "comment.line.double-slash.runescript"
+				}
+			]
+		},
+        "declarations": {
+            "name": "entity.name.tag.confscript",
+            "begin": "\\[",
+            "end": "\\]"
+        },
+        "strings": {
+            "name": "string.quoted.double.confscript",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                {
+                    "name": "constant.character.escape.confscript",
+                    "match": "\\\\."
+                }
+            ]
+        },
+        "properties": {
+            "captures": {
+                "1": {
+                    "name": "keyword.other.definition.confscript"
+                },
+                "2": {
+                    "name": "punctuation.separator.key-value.confscript"
+                }
+            },
+            "match": "\\b([a-zA-Z0-9_.-]+)\\b\\s*(=)"
+        }
+    }
+}

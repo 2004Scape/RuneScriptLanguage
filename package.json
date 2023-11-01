@@ -1,27 +1,68 @@
 {
-  "name": "runescriptlanguage",
-  "displayName": "RuneScript Language Support",
-  "publisher": "2004scape",
-  "repository": "https://github.com/2004scape/RuneScriptLanguage",
-  "description": "Syntax highlighting and (eventually) intellisense for RuneScript.",
-  "version": "0.0.1",
-  "engines": {
-    "vscode": "^1.83.0"
-  },
-  "categories": [
-    "Programming Languages"
-  ],
-  "contributes": {
-    "languages": [{
-      "id": "runescript",
-      "aliases": ["Runescript", "runescript"],
-      "extensions": [".rs",".rs2"],
-      "configuration": "./language-configuration.json"
-    }],
-    "grammars": [{
-      "language": "runescript",
-      "scopeName": "source.rs",
-      "path": "./syntaxes/runescript.tmLanguage.json"
-    }]
-  }
+    "name": "runescriptlanguage",
+    "displayName": "RuneScript Language Support",
+    "publisher": "2004scape",
+    "repository": "https://github.com/2004scape/RuneScriptLanguage",
+    "description": "Syntax highlighting and (eventually) intellisense for RuneScript.",
+    "version": "0.0.2",
+    "engines": {
+        "vscode": "*"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "runescript",
+                "aliases": [
+                    "RuneScript",
+                    "Runescript",
+                    "runescript"
+                ],
+                "extensions": [
+                    ".rs2"
+                ]
+            },
+            {
+                "id": "confscript",
+                "aliases": [
+                    "ConfScript",
+                    "Confscript",
+                    "confscript"
+                ],
+                "extensions": [
+                    ".dbrow",
+                    ".dbtable",
+                    ".enum",
+                    ".hunt",
+                    ".idk",
+                    ".if",
+                    ".inv",
+                    ".loc",
+                    ".mesanim",
+                    ".npc",
+                    ".obj",
+                    ".param",
+                    ".seq",
+                    ".struct",
+                    ".varn",
+                    ".varp"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "runescript",
+                "scopeName": "source.runescript",
+                "path": "./syntaxes/runescript.tmLanguage.json"
+            },
+            {
+                "language": "confscript",
+                "scopeName": "source.confscript",
+                "path": "./syntaxes/confscript.tmLanguage.json"
+            }
+        ]
+    }
 }
