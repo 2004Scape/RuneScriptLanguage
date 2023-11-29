@@ -1,0 +1,108 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "enumconfig",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#config"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line",
+                    "match": "(//).*\\n?"
+                },
+                {
+                    "name": "comment.block",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "config": {
+            "patterns": [
+                {
+                    "comment": "[name]",
+                    "name": "entity.name.function.enumconfig",
+                    "match": "\\[\\w+\\]"
+                },
+                {
+                    "comment": "Numeric values",
+                    "name": "constant.numeric.enumconfig",
+                    "match": "\\b\\d+\\b"
+                },
+                {
+                    "comment": "Boolean values, part of property",
+                    "name": "variable.language.enumconfig",
+                    "match": "\\b(?<==)(yes|no)\\b"
+                },
+                {
+                    "comment": "Constants",
+                    "name": "constant.language.enumconfig",
+                    "match": "\\b\\^\\w+\\b"
+                },
+                {
+                    "comment": "Coord values",
+                    "name": "constant.numeric.enumconfig",
+                    "match": "\\b(\\d+_){4}\\d+\\b"
+                },
+                {
+                    "comment": "Enum inputtype values",
+                    "match": "^(inputtype)=(int|autoint|string|enum|obj|loc|component|namedobj|struct|boolean|coord|category|spotanim|npc|inv|synth|seq|stat|varp|player_uid|npc_uid|interface)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.enumconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.enumconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Enum outputtype values",
+                    "match": "^(outputtype)=(int|string|enum|obj|loc|component|namedobj|struct|boolean|coord|category|spotanim|npc|inv|synth|seq|stat|varp|player_uid|npc_uid|interface)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.enumconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.enumconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Enum default values",
+                    "match": "^(default)=(.+)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.enumconfig.key"
+                        },
+                        "2": {
+                            "name": "constant.numeric.enumconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Enum values",
+                    "match": "^(val)=(.+),(.+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.enumconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.name.enumconfig.value"
+                        },
+                        "3": {
+                            "name": "constant.numeric.enumconfig"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "scopeName": "source.enumconfig"
+}

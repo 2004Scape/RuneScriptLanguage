@@ -1,0 +1,92 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "invconfig",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#config"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line",
+                    "match": "(//).*\\n?"
+                },
+                {
+                    "name": "comment.block",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "config": {
+            "patterns": [
+                {
+                    "comment": "[name]",
+                    "name": "entity.name.function.invconfig",
+                    "match": "\\[\\w+\\]"
+                },
+                {
+                    "comment": "Config properties",
+                    "name": "entity.name.type.objconfig",
+                    "match": "^(size|stackall|restock|allstock)(?==)"
+                },
+                {
+                    "comment": "Numeric values",
+                    "name": "constant.numeric.invconfig",
+                    "match": "\\b\\d+\\b"
+                },
+                {
+                    "comment": "Boolean values, part of property",
+                    "name": "variable.language.invconfig",
+                    "match": "\\b(?<==)(yes|no)\\b"
+                },
+                {
+                    "comment": "Constants",
+                    "name": "constant.language.invconfig",
+                    "match": "\\b\\^\\w+\\b"
+                },
+                {
+                    "comment": "Coord values",
+                    "name": "constant.numeric.invconfig",
+                    "match": "\\b(\\d+_){4}\\d+\\b"
+                },
+                {
+                    "comment": "Inventory scope values",
+                    "match": "^(scope)=(shared|perm|temp)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.invconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.invconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Inventory stock values",
+                    "match": "^(stock\\d+)=(.+),(\\d+),(\\d+)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.invconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.other.invconfig"
+                        },
+                        "3": {
+                            "name": "constant.numeric.invconfig"
+                        },
+                        "4": {
+                            "name": "constant.numeric.invconfig"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "scopeName": "source.invconfig"
+}

@@ -4,7 +4,7 @@
     "publisher": "2004scape",
     "repository": "https://github.com/2004scape/RuneScriptLanguage",
     "description": "Syntax highlighting for RuneScript.",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "engines": {
         "vscode": "*"
     },
@@ -28,27 +28,17 @@
             {
                 "id": "confscript",
                 "aliases": [
-                    "ConfScript",
+                    "ConfScript (general)",
                     "Confscript",
                     "confscript"
                 ],
                 "extensions": [
                     ".constant",
-                    ".dbrow",
-                    ".dbtable",
-                    ".enum",
                     ".hunt",
                     ".idk",
                     ".if",
-                    ".inv",
-                    ".loc",
                     ".mesanim",
-                    ".npc",
-                    ".param",
-                    ".seq",
-                    ".struct",
-                    ".varn",
-                    ".varp"
+                    ".seq"
                 ],
                 "configuration": "./confscript.language-configuration.json"
             },
@@ -60,7 +50,107 @@
                 "extensions": [
                     ".obj"
                 ],
-                "configuration": "./objconfig.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "locconfig",
+                "aliases": [
+                    "Location Config"
+                ],
+                "extensions": [
+                    ".loc"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "npcconfig",
+                "aliases": [
+                    "NPC Config"
+                ],
+                "extensions": [
+                    ".npc"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "dbtableconfig",
+                "aliases": [
+                    "Database Table Config"
+                ],
+                "extensions": [
+                    ".dbtable"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "dbrowconfig",
+                "aliases": [
+                    "Database Row Config"
+                ],
+                "extensions": [
+                    ".dbrow"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "paramconfig",
+                "aliases": [
+                    "Param Config"
+                ],
+                "extensions": [
+                    ".param"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "structconfig",
+                "aliases": [
+                    "Struct Config"
+                ],
+                "extensions": [
+                    ".struct"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "enumconfig",
+                "aliases": [
+                    "Enum Config"
+                ],
+                "extensions": [
+                    ".enum"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "varpconfig",
+                "aliases": [
+                    "Var Player Config"
+                ],
+                "extensions": [
+                    ".varp"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "varnconfig",
+                "aliases": [
+                    "Var NPC Config"
+                ],
+                "extensions": [
+                    ".varn"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "invconfig",
+                "aliases": [
+                    "Inventory Config"
+                ],
+                "extensions": [
+                    ".inv"
+                ],
+                "configuration": "./confscript.language-configuration.json"
             }
         ],
         "grammars": [
@@ -78,6 +168,56 @@
                 "language": "objconfig",
                 "scopeName": "source.objconfig",
                 "path": "./syntaxes/objconfig.tmLanguage.json"
+            },
+            {
+                "language": "locconfig",
+                "scopeName": "source.locconfig",
+                "path": "./syntaxes/locconfig.tmLanguage.json"
+            },
+            {
+                "language": "npcconfig",
+                "scopeName": "source.npcconfig",
+                "path": "./syntaxes/npcconfig.tmLanguage.json"
+            },
+            {
+                "language": "dbtableconfig",
+                "scopeName": "source.dbtableconfig",
+                "path": "./syntaxes/dbtableconfig.tmLanguage.json"
+            },
+            {
+                "language": "dbrowconfig",
+                "scopeName": "source.dbrowconfig",
+                "path": "./syntaxes/dbrowconfig.tmLanguage.json"
+            },
+            {
+                "language": "paramconfig",
+                "scopeName": "source.paramconfig",
+                "path": "./syntaxes/paramconfig.tmLanguage.json"
+            },
+            {
+                "language": "structconfig",
+                "scopeName": "source.structconfig",
+                "path": "./syntaxes/structconfig.tmLanguage.json"
+            },
+            {
+                "language": "enumconfig",
+                "scopeName": "source.enumconfig",
+                "path": "./syntaxes/enumconfig.tmLanguage.json"
+            },
+            {
+                "language": "varpconfig",
+                "scopeName": "source.varpconfig",
+                "path": "./syntaxes/varpconfig.tmLanguage.json"
+            },
+            {
+                "language": "varnconfig",
+                "scopeName": "source.varnconfig",
+                "path": "./syntaxes/varnconfig.tmLanguage.json"
+            },
+            {
+                "language": "invconfig",
+                "scopeName": "source.invconfig",
+                "path": "./syntaxes/invconfig.tmLanguage.json"
             }
         ]
     }

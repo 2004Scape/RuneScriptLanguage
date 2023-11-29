@@ -1,0 +1,69 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "varnconfig",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#config"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line",
+                    "match": "(//).*\\n?"
+                },
+                {
+                    "name": "comment.block",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "config": {
+            "patterns": [
+                {
+                    "comment": "[name]",
+                    "name": "entity.name.function.varnconfig",
+                    "match": "\\[\\w+\\]"
+                },
+                {
+                    "comment": "Numeric values",
+                    "name": "constant.numeric.varnconfig",
+                    "match": "\\b\\d+\\b"
+                },
+                {
+                    "comment": "Boolean values, part of property",
+                    "name": "variable.language.varnconfig",
+                    "match": "\\b(?<==)(yes|no)\\b"
+                },
+                {
+                    "comment": "Constants",
+                    "name": "constant.language.varnconfig",
+                    "match": "\\b\\^\\w+\\b"
+                },
+                {
+                    "comment": "Coord values",
+                    "name": "constant.numeric.varnconfig",
+                    "match": "\\b(\\d+_){4}\\d+\\b"
+                },
+                {
+                    "comment": "Var NPC type values",
+                    "match": "^(type)=(int|string|enum|obj|loc|component|namedobj|struct|boolean|coord|category|spotanim|npc|inv|synth|seq|stat|varp|player_uid|npc_uid|interface)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.varnconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.varnconfig"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "scopeName": "source.varnconfig"
+}

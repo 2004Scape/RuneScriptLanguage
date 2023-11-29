@@ -1,6 +1,6 @@
 {
     "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-    "name": "objconfig",
+    "name": "locconfig",
     "patterns": [
         {
             "include": "#comments"
@@ -27,70 +27,55 @@
             "patterns": [
                 {
                     "comment": "[name]",
-                    "name": "entity.name.function.objconfig",
+                    "name": "entity.name.function.locconfig",
                     "match": "\\[\\w+\\]"
                 },
                 {
                     "comment": "String values by property",
-                    "match": "^(name|desc|op[1-5]|iop[1-5])=(.+)",
+                    "match": "^(name|desc|op[1-5])=(.+)",
                     "captures": {
                         "1": {
-                            "name": "entity.name.type.objconfig.key"
+                            "name": "entity.name.type.locconfig.key"
                         },
                         "2": {
-                            "name": "string.unquoted.objconfig.value"
+                            "name": "string.unquoted.locconfig.value"
                         }
                     }
                 },
                 {
                     "comment": "Config properties",
-                    "name": "entity.name.type.objconfig",
-                    "match": "^(2dzoom|2dxan|2dyan|2dzan|2dxof|2dyof|recol[1-6][sd]|cost|respawnrate|code9|stackable|members|tradeable|wearpos|wearpos2|wearpos3|weight|count)(?==)"
+                    "name": "entity.name.type.locconfig",
+                    "match": "^(width|length|recol[1-6][sd]|walloff|ambient|contrast|mapfunction|resizex|resizey|resizez|mapscene|xoff|yoff|zoff|blockwalk|blockrange|active|hillskew|sharelight|occlude|hasalpha|mirror|shadow|forcedecor)(?==)"
                 },
                 {
                     "comment": "Numeric values",
-                    "name": "constant.numeric.objconfig",
+                    "name": "constant.numeric.locconfig",
                     "match": "\\b\\d+\\b"
                 },
                 {
                     "comment": "Boolean values, part of property",
-                    "name": "variable.language.objconfig",
+                    "name": "variable.language.locconfig",
                     "match": "\\b(?<==)(yes|no)\\b"
                 },
                 {
                     "comment": "Constants",
-                    "name": "constant.language.objconfig",
+                    "name": "constant.language.locconfig",
                     "match": "\\b\\^\\w+\\b"
                 },
                 {
                     "comment": "Coord values",
-                    "name": "constant.numeric.objconfig",
+                    "name": "constant.numeric.locconfig",
                     "match": "\\b(\\d+_){4}\\d+\\b"
                 },
                 {
                     "comment": "Reference values",
-                    "match": "^(model|manwear[2-3]|womanwear[2-3]|manhead2?|womanhead2?|category|code10)=(.+)",
+                    "match": "^(model|category|anim)=(.+)",
                     "captures": {
                         "1": {
-                            "name": "entity.name.type.objconfig.key"
+                            "name": "entity.name.type.locconfig.key"
                         },
                         "2": {
-                            "name": "variable.name.objconfig.value"
-                        }
-                    }
-                },
-                {
-                    "comment": "Reference values with a numerical value following",
-                    "match": "^(manwear|womanwear|count[1-9])=(.+),(\\d+)",
-                    "captures": {
-                        "1": {
-                            "name": "entity.name.type.objconfig.key"
-                        },
-                        "2": {
-                            "name": "variable.name.objconfig.value"
-                        },
-                        "3": {
-                            "name": "constant.numeric.objconfig"
+                            "name": "variable.name.locconfig.value"
                         }
                     }
                 },
@@ -99,28 +84,30 @@
                     "match": "^(param)=(.+),(.+)",
                     "captures": {
                         "1": {
-                            "name": "entity.name.type.objconfig.key"
+                            "name": "entity.name.type.locconfig.key"
                         },
                         "2": {
-                            "name": "variable.name.objconfig.value"
+                            "name": "variable.name.locconfig.value"
                         },
                         "3": {
-                            "name": "constant.numeric.objconfig"
+                            "name": "constant.numeric.locconfig"
                         }
                     }
                 },
                 {
-                    "comment": "Object weight property values",
-                    "name": "constant.numeric.objconfig",
-                    "match": "\\b(?<==)\\d+(oz|lb|kg|g)\\b"
-                },
-                {
-                    "comment": "Object wearpos property values",
-                    "name": "variable.language.objconfig",
-                    "match": "\\b(?<==)(hat|back|front|righthand|torso|lefthand|arms|legs|head|hands|feet|jaw|ring|quiver)\\b"
+                    "comment": "Location forceapproach values",
+                    "match": "^(forceapproach)=(top|right|bottom|left)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.locconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.locconfig"
+                        }
+                    }
                 }
             ]
         }
     },
-    "scopeName": "source.objconfig"
+    "scopeName": "source.locconfig"
 }

@@ -1,0 +1,77 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "dbtableconfig",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#config"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line",
+                    "match": "(//).*\\n?"
+                },
+                {
+                    "name": "comment.block",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "config": {
+            "patterns": [
+                {
+                    "comment": "[name]",
+                    "name": "entity.name.function.dbtableconfig",
+                    "match": "\\[\\w+\\]"
+                },
+                {
+                    "comment": "Config properties",
+                    "name": "entity.name.type.dbtableconfig",
+                    "match": "^(default)(?==)"
+                },
+                {
+                    "comment": "Numeric values",
+                    "name": "constant.numeric.dbtableconfig",
+                    "match": "\\b\\d+\\b"
+                },
+                {
+                    "comment": "Boolean values",
+                    "name": "variable.language.dbtableconfig",
+                    "match": "\\b(?<==)(true|false)\\b"
+                },
+                {
+                    "comment": "Constants",
+                    "name": "constant.language.dbtableconfig",
+                    "match": "\\b\\^\\w+\\b"
+                },
+                {
+                    "comment": "Coord values",
+                    "name": "constant.numeric.dbtableconfig",
+                    "match": "\\b(\\d+_){4}\\d+\\b"
+                },
+                {
+                    "comment": "Column values",
+                    "match": "^(column)=(\\w+),(.+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.npcconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.name.npcconfig.value"
+                        },
+                        "3": {
+                            "name": "constant.numeric.npcconfig"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "scopeName": "source.dbtableconfig"
+}

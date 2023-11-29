@@ -1,0 +1,170 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "npcconfig",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#config"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line",
+                    "match": "(//).*\\n?"
+                },
+                {
+                    "name": "comment.block",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "config": {
+            "patterns": [
+                {
+                    "comment": "[name]",
+                    "name": "entity.name.function.npcconfig",
+                    "match": "\\[\\w+\\]"
+                },
+                {
+                    "comment": "String values by property",
+                    "match": "^(name|desc|op[1-5])=(.+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.npcconfig.key"
+                        },
+                        "2": {
+                            "name": "string.unquoted.npcconfig.value"
+                        }
+                    }
+                },
+                {
+                    "comment": "Config properties",
+                    "name": "entity.name.type.npcconfig",
+                    "match": "^(size|recol[1-6][sd]|resizex|resizey|resizez|resizeh|resizev|wanderrange|maxrange|huntrange|attackrange|hitpoints|attack|strength|defence|magic|ranged|timer|respawnrate|hasalpha|visonmap)(?==)"
+                },
+                {
+                    "comment": "Numeric values",
+                    "name": "constant.numeric.npcconfig",
+                    "match": "\\b\\d+\\b"
+                },
+                {
+                    "comment": "Boolean values, part of property",
+                    "name": "variable.language.npcconfig",
+                    "match": "\\b(?<==)(yes|no)\\b"
+                },
+                {
+                    "comment": "Constants",
+                    "name": "constant.language.npcconfig",
+                    "match": "\\b\\^\\w+\\b"
+                },
+                {
+                    "comment": "Coord values",
+                    "name": "constant.numeric.npcconfig",
+                    "match": "\\b(\\d+_){4}\\d+\\b"
+                },
+                {
+                    "comment": "Reference values",
+                    "match": "^(model\\d+|head\\d+|readyanim|walkanim|category|huntmode)=(.+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.npcconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.name.npcconfig.value"
+                        }
+                    }
+                },
+                {
+                    "comment": "Param values",
+                    "match": "^(param)=(.+),(.+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.npcconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.name.npcconfig.value"
+                        },
+                        "3": {
+                            "name": "constant.numeric.npcconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "NPC walkanim values",
+                    "match": "^(walkanims)=(\\w+),(\\w+),(\\w+),(\\w+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.npcconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.name.npcconfig.value"
+                        },
+                        "3": {
+                            "name": "variable.name.npcconfig.value"
+                        },
+                        "4": {
+                            "name": "variable.name.npcconfig.value"
+                        },
+                        "5": {
+                            "name": "variable.name.npcconfig.value"
+                        }
+                    }
+                },
+                {
+                    "comment": "NPC vislevel values",
+                    "match": "^(vislevel)=(\\d+|hide)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.npcconfig.key"
+                        },
+                        "2": {
+                            "name": "constant.numeric.npcconfig.value"
+                        }
+                    }
+                },
+                {
+                    "comment": "NPC moverestrict values",
+                    "match": "^(moverestrict)=(blocked\\+normal|normal|blocked|indoors|outdoors|nomove|passthru)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.npcconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.npcconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "NPC blockwalk values",
+                    "match": "^(blockwalk)=(none|all|npc)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.npcconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.npcconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "NPC defaultmode values",
+                    "match": "^(defaultmode)=(none|wander|patrol)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.npcconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.npcconfig"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "scopeName": "source.npcconfig"
+}

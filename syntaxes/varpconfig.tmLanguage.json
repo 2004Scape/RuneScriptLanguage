@@ -1,0 +1,86 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "varpconfig",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#config"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line",
+                    "match": "(//).*\\n?"
+                },
+                {
+                    "name": "comment.block",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "config": {
+            "patterns": [
+                {
+                    "comment": "[name]",
+                    "name": "entity.name.function.varpconfig",
+                    "match": "\\[\\w+\\]"
+                },
+                {
+                    "comment": "Numeric values",
+                    "name": "constant.numeric.varpconfig",
+                    "match": "\\b\\d+\\b"
+                },
+                {
+                    "comment": "Boolean values, part of property",
+                    "name": "variable.language.varpconfig",
+                    "match": "\\b(?<==)(yes|no)\\b"
+                },
+                {
+                    "comment": "Constants",
+                    "name": "constant.language.varpconfig",
+                    "match": "\\b\\^\\w+\\b"
+                },
+                {
+                    "comment": "Coord values",
+                    "name": "constant.numeric.varpconfig",
+                    "match": "\\b(\\d+_){4}\\d+\\b"
+                },
+                {
+                    "comment": "Config properties",
+                    "name": "entity.name.type.objconfig",
+                    "match": "^(clientcode|protect|transmit)(?==)"
+                },
+                {
+                    "comment": "Var Player type values",
+                    "match": "^(type)=(int|string|enum|obj|loc|component|namedobj|struct|boolean|coord|category|spotanim|npc|inv|synth|seq|stat|varp|player_uid|npc_uid|interface)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.varpconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.varpconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Var Player scope values",
+                    "match": "^(scope)=(perm|temp)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.varpconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.varpconfig"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "scopeName": "source.varpconfig"
+}
