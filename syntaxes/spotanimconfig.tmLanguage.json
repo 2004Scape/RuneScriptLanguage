@@ -1,6 +1,6 @@
 {
     "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-    "name": "paramconfig",
+    "name": "spotanimconfig",
     "patterns": [
         {
             "include": "#comments"
@@ -27,60 +27,48 @@
             "patterns": [
                 {
                     "comment": "[name]",
-                    "name": "entity.name.function.paramconfig",
+                    "name": "entity.name.function.spotanimconfig",
                     "match": "\\[\\w+\\]"
                 },
                 {
                     "comment": "Config properties",
-                    "name": "entity.name.type.objconfig",
-                    "match": "^(autodisable)(?==)"
+                    "name": "entity.name.type.spotanimconfig",
+                    "match": "^(resizeh|resizev|orientation|ambient|contrast|recol[1-6][sd]|hasalpha)(?==)"
                 },
                 {
                     "comment": "Numeric values",
-                    "name": "constant.numeric.paramconfig",
+                    "name": "constant.numeric.spotanimconfig",
                     "match": "\\b\\d+\\b"
                 },
                 {
                     "comment": "Boolean values, part of property",
-                    "name": "variable.language.paramconfig",
+                    "name": "variable.language.spotanimconfig",
                     "match": "\\b(?<==)(yes|no)\\b"
                 },
                 {
                     "comment": "Constants",
-                    "name": "constant.language.paramconfig",
+                    "name": "constant.language.spotanimconfig",
                     "match": "\\b\\^\\w+\\b"
                 },
                 {
                     "comment": "Coord values",
-                    "name": "constant.numeric.paramconfig",
+                    "name": "constant.numeric.spotanimconfig",
                     "match": "\\b(\\d+_){4}\\d+\\b"
                 },
                 {
-                    "comment": "Param type values",
-                    "match": "^(type)=(int|string|enum|obj|loc|component|namedobj|struct|boolean|coord|category|spotanim|npc|inv|synth|seq|stat|varp|player_uid|npc_uid|interface)?",
+                    "comment": "Reference values",
+                    "match": "^(model|anim)=(.+)",
                     "captures": {
                         "1": {
-                            "name": "entity.name.type.paramconfig.key"
+                            "name": "entity.name.type.spotanimconfig.key"
                         },
                         "2": {
-                            "name": "variable.language.paramconfig"
-                        }
-                    }
-                },
-                {
-                    "comment": "Param default values",
-                    "match": "^(default)=(.+)?",
-                    "captures": {
-                        "1": {
-                            "name": "entity.name.type.paramconfig.key"
-                        },
-                        "2": {
-                            "name": "constant.numeric.paramconfig"
+                            "name": "variable.name.spotanimconfig.value"
                         }
                     }
                 }
             ]
         }
     },
-    "scopeName": "source.paramconfig"
+    "scopeName": "source.spotanimconfig"
 }

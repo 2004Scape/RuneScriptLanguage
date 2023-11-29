@@ -4,7 +4,7 @@
     "publisher": "2004scape",
     "repository": "https://github.com/2004scape/RuneScriptLanguage",
     "description": "Syntax highlighting for RuneScript.",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "engines": {
         "vscode": "*"
     },
@@ -24,23 +24,6 @@
                     ".rs2"
                 ],
                 "configuration": "./runescript.language-configuration.json"
-            },
-            {
-                "id": "confscript",
-                "aliases": [
-                    "ConfScript (general)",
-                    "Confscript",
-                    "confscript"
-                ],
-                "extensions": [
-                    ".constant",
-                    ".hunt",
-                    ".idk",
-                    ".if",
-                    ".mesanim",
-                    ".seq"
-                ],
-                "configuration": "./confscript.language-configuration.json"
             },
             {
                 "id": "objconfig",
@@ -151,6 +134,116 @@
                     ".inv"
                 ],
                 "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "seqconfig",
+                "aliases": [
+                    "Sequence Config"
+                ],
+                "extensions": [
+                    ".seq"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "spotanimconfig",
+                "aliases": [
+                    "Spot Animation Config"
+                ],
+                "extensions": [
+                    ".spotanim"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "mesanimconfig",
+                "aliases": [
+                    "Message Animation Config"
+                ],
+                "extensions": [
+                    ".mesanim"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "idkconfig",
+                "aliases": [
+                    "Identity Kit Config"
+                ],
+                "extensions": [
+                    ".idk"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "huntconfig",
+                "aliases": [
+                    "Hunt Mode Config"
+                ],
+                "extensions": [
+                    ".hunt"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "constants",
+                "aliases": [
+                    "Constants"
+                ],
+                "extensions": [
+                    ".constant"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "interface",
+                "aliases": [
+                    "Interface"
+                ],
+                "extensions": [
+                    ".if"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "floconfig",
+                "aliases": [
+                    "Floor Config"
+                ],
+                "extensions": [
+                    ".flo"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "pack",
+                "aliases": [
+                    "Pack File"
+                ],
+                "extensions": [
+                    ".pack"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "packorder",
+                "aliases": [
+                    "Pack Order File"
+                ],
+                "extensions": [
+                    ".order"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "opt",
+                "aliases": [
+                    "Image Options"
+                ],
+                "extensions": [
+                    ".opt"
+                ],
+                "configuration": "./confscript.language-configuration.json"
             }
         ],
         "grammars": [
@@ -158,11 +251,6 @@
                 "language": "runescript",
                 "scopeName": "source.runescript",
                 "path": "./syntaxes/runescript.tmLanguage.json"
-            },
-            {
-                "language": "confscript",
-                "scopeName": "source.confscript",
-                "path": "./syntaxes/confscript.tmLanguage.json"
             },
             {
                 "language": "objconfig",
@@ -218,6 +306,61 @@
                 "language": "invconfig",
                 "scopeName": "source.invconfig",
                 "path": "./syntaxes/invconfig.tmLanguage.json"
+            },
+            {
+                "language": "seqconfig",
+                "scopeName": "source.seqconfig",
+                "path": "./syntaxes/seqconfig.tmLanguage.json"
+            },
+            {
+                "language": "spotanimconfig",
+                "scopeName": "source.spotanimconfig",
+                "path": "./syntaxes/spotanimconfig.tmLanguage.json"
+            },
+            {
+                "language": "mesanimconfig",
+                "scopeName": "source.mesanimconfig",
+                "path": "./syntaxes/mesanimconfig.tmLanguage.json"
+            },
+            {
+                "language": "idkconfig",
+                "scopeName": "source.idkconfig",
+                "path": "./syntaxes/idkconfig.tmLanguage.json"
+            },
+            {
+                "language": "huntconfig",
+                "scopeName": "source.huntconfig",
+                "path": "./syntaxes/huntconfig.tmLanguage.json"
+            },
+            {
+                "language": "constants",
+                "scopeName": "source.constants",
+                "path": "./syntaxes/constants.tmLanguage.json"
+            },
+            {
+                "language": "interface",
+                "scopeName": "source.interface",
+                "path": "./syntaxes/interface.tmLanguage.json"
+            },
+            {
+                "language": "floconfig",
+                "scopeName": "source.floconfig",
+                "path": "./syntaxes/floconfig.tmLanguage.json"
+            },
+            {
+                "language": "pack",
+                "scopeName": "source.pack",
+                "path": "./syntaxes/pack.tmLanguage.json"
+            },
+            {
+                "language": "packorder",
+                "scopeName": "source.packorder",
+                "path": "./syntaxes/packorder.tmLanguage.json"
+            },
+            {
+                "language": "opt",
+                "scopeName": "source.opt",
+                "path": "./syntaxes/opt.tmLanguage.json"
             }
         ]
     }

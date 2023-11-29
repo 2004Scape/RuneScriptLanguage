@@ -1,0 +1,170 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "huntconfig",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#config"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line",
+                    "match": "(//).*\\n?"
+                },
+                {
+                    "name": "comment.block",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "config": {
+            "patterns": [
+                {
+                    "comment": "[name]",
+                    "name": "entity.name.function.huntconfig",
+                    "match": "\\[\\w+\\]"
+                },
+                {
+                    "comment": "Config properties",
+                    "name": "entity.name.type.huntconfig",
+                    "match": "^(rate)(?==)"
+                },
+                {
+                    "comment": "Numeric values",
+                    "name": "constant.numeric.huntconfig",
+                    "match": "\\b\\d+\\b"
+                },
+                {
+                    "comment": "Boolean values, part of property",
+                    "name": "variable.language.huntconfig",
+                    "match": "\\b(?<==)(yes|no)\\b"
+                },
+                {
+                    "comment": "Constants",
+                    "name": "constant.language.huntconfig",
+                    "match": "\\b\\^\\w+\\b"
+                },
+                {
+                    "comment": "Coord values",
+                    "name": "constant.numeric.huntconfig",
+                    "match": "\\b(\\d+_){4}\\d+\\b"
+                },
+                {
+                    "comment": "Hunt type values",
+                    "match": "^(type)=(off|player|npc|obj|scenery)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.huntconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.huntconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Hunt check_vis values",
+                    "match": "^(check_vis)=(off|lineofsight|lineofwalk)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.huntconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.huntconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Hunt check_nottoostrong values",
+                    "match": "^(check_nottoostrong)=(off|outside_wilderness)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.huntconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.huntconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Hunt check_notcombat values",
+                    "match": "^(check_notcombat)=(\\%.+)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.huntconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.other.huntconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Hunt check_notcombat_self values",
+                    "match": "^(check_notcombat_self)=(\\%.+)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.huntconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.other.huntconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Hunt check_notbusy values",
+                    "match": "^(check_notbusy)=(off|on)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.huntconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.huntconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Hunt find_keephunting values",
+                    "match": "^(find_keephunting)=(off|on)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.huntconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.huntconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Hunt find_newmode values",
+                    "match": "^(find_newmode)=(opplayer[1-5]|applayer[1-5])?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.huntconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.huntconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Hunt nobodynear values",
+                    "match": "^(nobodynear)=(keephunting|pausehunt)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.huntconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.huntconfig"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "scopeName": "source.huntconfig"
+}

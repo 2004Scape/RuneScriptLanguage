@@ -1,0 +1,39 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "constants",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#config"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line",
+                    "match": "(//).*\\n?"
+                }
+            ]
+        },
+        "config": {
+            "patterns": [
+                {
+                    "comment": "Constant declaration",
+                    "match": "(\\^.+)\\s*=\\s*(.+)",
+                    "captures": {
+                        "1": {
+                            "name": "variable.name.constants.key"
+                        },
+                        "2": {
+                            "name": "constant.numeric.constants"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "scopeName": "source.constants"
+}

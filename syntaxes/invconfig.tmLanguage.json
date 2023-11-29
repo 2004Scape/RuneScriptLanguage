@@ -69,7 +69,7 @@
                 },
                 {
                     "comment": "Inventory stock values",
-                    "match": "^(stock\\d+)=(.+),(\\d+),(\\d+)?",
+                    "match": "^(stock\\d+)=(.+),(\\d+),?(\\d+)?",
                     "captures": {
                         "1": {
                             "name": "entity.name.type.invconfig.key"

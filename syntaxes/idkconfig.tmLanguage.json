@@ -1,6 +1,6 @@
 {
     "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-    "name": "paramconfig",
+    "name": "idkconfig",
     "patterns": [
         {
             "include": "#comments"
@@ -27,60 +27,60 @@
             "patterns": [
                 {
                     "comment": "[name]",
-                    "name": "entity.name.function.paramconfig",
+                    "name": "entity.name.function.idkconfig",
                     "match": "\\[\\w+\\]"
                 },
                 {
                     "comment": "Config properties",
                     "name": "entity.name.type.objconfig",
-                    "match": "^(autodisable)(?==)"
+                    "match": "^(disable|recol[1-6][sd])(?==)"
                 },
                 {
                     "comment": "Numeric values",
-                    "name": "constant.numeric.paramconfig",
+                    "name": "constant.numeric.idkconfig",
                     "match": "\\b\\d+\\b"
                 },
                 {
                     "comment": "Boolean values, part of property",
-                    "name": "variable.language.paramconfig",
+                    "name": "variable.language.idkconfig",
                     "match": "\\b(?<==)(yes|no)\\b"
                 },
                 {
                     "comment": "Constants",
-                    "name": "constant.language.paramconfig",
+                    "name": "constant.language.idkconfig",
                     "match": "\\b\\^\\w+\\b"
                 },
                 {
                     "comment": "Coord values",
-                    "name": "constant.numeric.paramconfig",
+                    "name": "constant.numeric.idkconfig",
                     "match": "\\b(\\d+_){4}\\d+\\b"
                 },
                 {
-                    "comment": "Param type values",
-                    "match": "^(type)=(int|string|enum|obj|loc|component|namedobj|struct|boolean|coord|category|spotanim|npc|inv|synth|seq|stat|varp|player_uid|npc_uid|interface)?",
+                    "comment": "Reference values",
+                    "match": "^(model\\d+|head\\d+)=(.+)",
                     "captures": {
                         "1": {
-                            "name": "entity.name.type.paramconfig.key"
+                            "name": "entity.name.type.idkconfig.key"
                         },
                         "2": {
-                            "name": "variable.language.paramconfig"
+                            "name": "variable.name.idkconfig.value"
                         }
                     }
                 },
                 {
-                    "comment": "Param default values",
-                    "match": "^(default)=(.+)?",
+                    "comment": "Reference values",
+                    "match": "^(type)=(man_hair|man_jaw|man_torso|man_arms|man_hands|man_legs|man_feet|woman_hair|woman_jaw|woman_torso|woman_arms|woman_hands|woman_legs|woman_feet)?",
                     "captures": {
                         "1": {
-                            "name": "entity.name.type.paramconfig.key"
+                            "name": "entity.name.type.idkconfig.key"
                         },
                         "2": {
-                            "name": "constant.numeric.paramconfig"
+                            "name": "variable.language.idkconfig.value"
                         }
                     }
                 }
             ]
         }
     },
-    "scopeName": "source.paramconfig"
+    "scopeName": "source.idkconfig"
 }

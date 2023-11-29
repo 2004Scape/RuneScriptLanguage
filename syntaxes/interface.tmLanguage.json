@@ -1,0 +1,191 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "interface",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#config"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line",
+                    "match": "(//).*\\n?"
+                },
+                {
+                    "name": "comment.block",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "config": {
+            "patterns": [
+                {
+                    "comment": "[name]",
+                    "name": "entity.name.function.interface",
+                    "match": "\\[\\w+\\]"
+                },
+                {
+                    "comment": "Config properties",
+                    "name": "entity.name.type.objconfig",
+                    "match": "^(x|y|clientcode|width|height|scroll|hide|draggable|interactable|usable|margin|slot\\d+|fill|center|shadowed|zoom|xan|yan)(?==)"
+                },
+                {
+                    "comment": "String values by property",
+                    "match": "^(text|activetext|actionverb|action|option|option\\d+|)=(.+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.objconfig.key"
+                        },
+                        "2": {
+                            "name": "string.unquoted.objconfig.value"
+                        }
+                    }
+                },
+                {
+                    "comment": "Numeric values",
+                    "name": "constant.numeric.interface",
+                    "match": "\\b\\d+\\b"
+                },
+                {
+                    "comment": "Boolean values, part of property",
+                    "name": "variable.language.interface",
+                    "match": "\\b(?<==)(yes|no)\\b"
+                },
+                {
+                    "comment": "Constants",
+                    "name": "constant.language.interface",
+                    "match": "\\b\\^\\w+\\b"
+                },
+                {
+                    "comment": "Coord values",
+                    "name": "constant.numeric.interface",
+                    "match": "\\b(\\d+_){4}\\d+\\b"
+                },
+                {
+                    "comment": "Reference values",
+                    "match": "^(layer|overlayer|model|activemodel|anim|activeanim)=(.+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.interface.key"
+                        },
+                        "2": {
+                            "name": "variable.name.interface.value"
+                        }
+                    }
+                },
+                {
+                    "comment": "Interface type values",
+                    "match": "^(type)=(layer|inv|rect|text|graphic|model|invtext)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.interface.key"
+                        },
+                        "2": {
+                            "name": "variable.language.interface"
+                        }
+                    }
+                },
+                {
+                    "comment": "Interface buttontype values",
+                    "match": "^(buttontype)=(normal|target|close|toggle|select|pause)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.interface.key"
+                        },
+                        "2": {
+                            "name": "variable.language.interface"
+                        }
+                    }
+                },
+                {
+                    "comment": "Interface colour values",
+                    "match": "^(colour|activecolour|overcolour)=(0[xX][0-9a-fA-F]+)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.interface.key"
+                        },
+                        "2": {
+                            "name": "constant.numeric.interface"
+                        }
+                    }
+                },
+                {
+                    "comment": "Interface font values",
+                    "match": "^(font)=(p11|p12|b12|q8)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.interface.key"
+                        },
+                        "2": {
+                            "name": "variable.language.interface"
+                        }
+                    }
+                },
+                {
+                    "comment": "Interface graphic values",
+                    "match": "^(graphic|activegraphic)=(\\w+),(\\d+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.interface.key"
+                        },
+                        "2": {
+                            "name": "variable.other.interface"
+                        },
+                        "3": {
+                            "name": "constant.numeric.interface"
+                        }
+                    }
+                },
+                {
+                    "comment": "Interface script op values",
+                    "match": "^(script\\d+op\\d+)=(.+),(.+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.interface.key"
+                        },
+                        "2": {
+                            "name": "variable.language.interface"
+                        },
+                        "3": {
+                            "name": "constant.numeric.interface"
+                        }
+                    }
+                },
+                {
+                    "comment": "Interface script values",
+                    "match": "^(script\\d+)=(.+),(.+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.interface.key"
+                        },
+                        "2": {
+                            "name": "variable.language.interface"
+                        },
+                        "3": {
+                            "name": "variable.other.interface"
+                        }
+                    }
+                },
+                {
+                    "comment": "Interface actiontarget values",
+                    "match": "^(actiontarget)=(.+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.interface.key"
+                        },
+                        "2": {
+                            "name": "variable.language.interface"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "scopeName": "source.interface"
+}

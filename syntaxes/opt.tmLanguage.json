@@ -1,0 +1,33 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "opt",
+    "patterns": [
+        {
+            "comment": "Image size widthxheight",
+            "name": "variable.language.opt",
+            "match": "\\d+x\\d+"
+        },
+        {
+            "comment": "Image encoding properties",
+            "match": "(\\d+),(\\d+),(\\d+),(\\d+),(row|column)",
+            "captures": {
+                "1": {
+                    "name": "constant.numeric.opt"
+                },
+                "2": {
+                    "name": "constant.numeric.opt"
+                },
+                "3": {
+                    "name": "constant.numeric.opt"
+                },
+                "4": {
+                    "name": "constant.numeric.opt"
+                },
+                "5": {
+                    "name": "variable.language.opt"
+                }
+            }
+        }
+    ],
+    "scopeName": "source.opt"
+}

@@ -1,0 +1,39 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "pack",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#config"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line",
+                    "match": "(//).*\\n?"
+                }
+            ]
+        },
+        "config": {
+            "patterns": [
+                {
+                    "comment": "id=name",
+                    "match": "(\\d+)=(.+)",
+                    "captures": {
+                        "1": {
+                            "name": "variable.language.pack"
+                        },
+                        "2": {
+                            "name": "entity.name.function.pack"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "scopeName": "source.pack"
+}
