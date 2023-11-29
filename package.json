@@ -4,7 +4,7 @@
     "publisher": "2004scape",
     "repository": "https://github.com/2004scape/RuneScriptLanguage",
     "description": "Syntax highlighting and (eventually) intellisense for RuneScript.",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "engines": {
         "vscode": "*"
     },
@@ -33,6 +33,7 @@
                     "confscript"
                 ],
                 "extensions": [
+                    ".constant",
                     ".dbrow",
                     ".dbtable",
                     ".enum",

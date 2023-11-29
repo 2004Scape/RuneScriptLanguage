@@ -6,9 +6,6 @@
             "include": "#comments"
         },
         {
-            "include": "#language-variables"
-        },
-        {
             "include": "#declarations"
         },
         {
@@ -25,37 +22,16 @@
         }
     ],
     "repository": {
-		"comments": {
-			"patterns": [
-				{
-					"begin": "(^[ \\t]+)?((//)(?:\\s*((@)internal)(?=\\s|$))?)",
-					"beginCaptures": {
-						"1": {
-							"name": "punctuation.whitespace.comment.leading.runescript"
-						},
-						"2": {
-							"name": "comment.line.double-slash.runescript"
-						},
-						"3": {
-							"name": "punctuation.definition.comment.runescript"
-						},
-						"4": {
-							"name": "storage.type.internaldeclaration.runescript"
-						},
-						"5": {
-							"name": "punctuation.decorator.internaldeclaration.runescript"
-						}
-					},
-					"end": "(?=$)",
-					"contentName": "comment.line.double-slash.runescript"
-				}
-			]
-		},
-        "language-variables": {
+        "comments": {
             "patterns": [
                 {
-                    "name": "variable.language",
-                    "match": "\\b(def_(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable))\\b"
+                    "name": "comment.line",
+                    "match": "(//).*\\n?"
+                },
+                {
+                    "name": "comment.block",
+                    "begin": "/\\*",
+                    "end": "\\*/"
                 }
             ]
         },
@@ -67,8 +43,16 @@
         "variables": {
             "patterns": [
                 {
+                    "name": "variable.language.runescript",
+                    "match": "\\b((def_)?(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|queue|weakqueue|timer|softtimer|char|dbcolumn|proc|label))\\b"
+                },
+                {
                     "name": "variable.other.runescript",
                     "match": "[\\^$%]\\w+"
+                },
+                {
+                    "name": "variable.language.runescript",
+                    "match": "\\b(true|false)\\b"
                 }
             ]
         },
@@ -84,7 +68,11 @@
             "patterns": [
                 {
                     "name": "keyword.control.runescript",
-                    "match": "\\b(if|while|for|return|else)\\b"
+                    "match": "\\b(if|while|for|return|else|case)\\b"
+                },
+                {
+                    "name": "keyword.control.runescript",
+                    "match": "\\b(switch_(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|queue|weakqueue|timer|softtimer|char|dbcolumn|proc|label))\\b"
                 }
             ]
         },
