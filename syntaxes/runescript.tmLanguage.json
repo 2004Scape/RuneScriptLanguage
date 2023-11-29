@@ -6,13 +6,10 @@
             "include": "#comments"
         },
         {
-            "include": "#declarations"
-        },
-        {
             "include": "#variables"
         },
         {
-            "include": "#functions"
+            "include": "#triggers"
         },
         {
             "include": "#keywords"
@@ -35,32 +32,61 @@
                 }
             ]
         },
-        "declarations": {
-            "name": "entity.name.tag.runescript",
-            "begin": "\\[",
-            "end": "\\]"
-        },
         "variables": {
             "patterns": [
                 {
-                    "name": "variable.language.runescript",
-                    "match": "\\b((def_)?(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|queue|weakqueue|timer|softtimer|char|dbcolumn|proc|label))\\b"
-                },
-                {
+                    "comment": "Local variables",
                     "name": "variable.other.runescript",
-                    "match": "[\\^$%]\\w+"
+                    "match": "\\$\\w+"
                 },
                 {
+                    "comment": "Global variables",
+                    "name": "variable.other.runescript",
+                    "match": "\\%\\w+"
+                },
+                {
+                    "comment": "Constants",
+                    "name": "constant.language.runescript",
+                    "match": "\\^\\w+"
+                },
+                {
+                    "comment": "Boolean values",
                     "name": "variable.language.runescript",
                     "match": "\\b(true|false)\\b"
+                },
+                {
+                    "comment": "Coord values",
+                    "name": "constant.numeric.runescript",
+                    "match": "\\b(\\d+_){4}\\d+\\b"
+                },
+                {
+                    "comment": "Numeric values",
+                    "name": "constant.numeric.runescript",
+                    "match": "\\b\\d+\\b"
                 }
             ]
         },
-        "functions": {
+        "triggers": {
             "patterns": [
                 {
+                    "comment": "Proc/label references",
                     "name": "entity.name.function.runescript",
                     "match": "[~@]\\w+"
+                },
+                {
+                    "comment": "Function parameters. This matches commands and types currently... todo: fix",
+                    "name": "variable.language.runescript",
+                    "match": "\\b((int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|char|dbcolumn|proc|label))\\b"
+                },
+                {
+                    "comment": "Highlight the first half of [trigger,subject] blue",
+                    "name": "variable.language.runescript",
+                    "match": "\\[\\w+(?=,)"
+                },
+                {
+                    "comment": "Highlight the second half of [trigger,subject] yellow",
+                    "name": "entity.name.function.runescript",
+                    "match": "(?<=,)\\w+\\]"
                 }
             ]
         },
@@ -73,6 +99,10 @@
                 {
                     "name": "keyword.control.runescript",
                     "match": "\\b(switch_(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|queue|weakqueue|timer|softtimer|char|dbcolumn|proc|label))\\b"
+                },
+                {
+                    "name": "variable.language.runescript",
+                    "match": "\\b(def_(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|queue|weakqueue|timer|softtimer|char|dbcolumn|proc|label))\\b"
                 }
             ]
         },

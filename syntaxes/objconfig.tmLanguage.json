@@ -1,0 +1,126 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "objconfig",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#config"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line",
+                    "match": "(//).*\\n?"
+                },
+                {
+                    "name": "comment.block",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "config": {
+            "patterns": [
+                {
+                    "comment": "[name]",
+                    "name": "entity.name.function.objconfig",
+                    "match": "\\[\\w+\\]"
+                },
+                {
+                    "comment": "String values by property",
+                    "match": "^(name|desc|op[1-5]|iop[1-5])=(.+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.objconfig.key"
+                        },
+                        "2": {
+                            "name": "string.unquoted.objconfig.value"
+                        }
+                    }
+                },
+                {
+                    "comment": "Config properties",
+                    "name": "entity.name.type.objconfig",
+                    "match": "^(2dzoom|2dxan|2dyan|2dzan|2dxof|2dyof|recol[1-6][sd]|cost|respawnrate|code9|stackable|members|tradeable|wearpos|wearpos2|wearpos3|weight|count)(?==)"
+                },
+                {
+                    "comment": "Numeric values",
+                    "name": "constant.numeric.objconfig",
+                    "match": "\\b\\d+\\b"
+                },
+                {
+                    "comment": "Boolean values, part of property",
+                    "name": "variable.language.objconfig",
+                    "match": "\\b(?<==)(yes|no)\\b"
+                },
+                {
+                    "comment": "Constants",
+                    "name": "constant.language.objconfig",
+                    "match": "\\b\\^\\w+\\b"
+                },
+                {
+                    "comment": "Coord values",
+                    "name": "constant.numeric.objconfig",
+                    "match": "\\b(\\d+_){4}\\d+\\b"
+                },
+                {
+                    "comment": "Reference values",
+                    "match": "^(model|manwear[2-3]|womanwear[2-3]|manhead2?|womanhead2?|category|code10)=(.+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.objconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.name.objconfig.value"
+                        }
+                    }
+                },
+                {
+                    "comment": "Reference values with a numerical value following",
+                    "match": "^(manwear|womanwear|count[1-9])=(.+),(\\d+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.objconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.name.objconfig.value"
+                        },
+                        "3": {
+                            "name": "constant.numeric.objconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Param values",
+                    "match": "^(param)=(\\w+),(.+)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.objconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.name.objconfig.value"
+                        },
+                        "3": {
+                            "name": "constant.numeric.objconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Object weight property values",
+                    "name": "constant.numeric.objconfig",
+                    "match": "\\b(?<==)\\d+(oz|lb|kg|g)\\b"
+                },
+                {
+                    "comment": "Object wearpos property values",
+                    "name": "variable.language.objconfig",
+                    "match": "\\b(?<==)(hat|back|front|righthand|torso|lefthand|arms|legs|head|hands|feet|jaw|ring|quiver)\\b"
+                }
+            ]
+        }
+    },
+    "scopeName": "source.objconfig"
+}

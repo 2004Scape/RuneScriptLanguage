@@ -3,8 +3,8 @@
     "displayName": "RuneScript Language Support",
     "publisher": "2004scape",
     "repository": "https://github.com/2004scape/RuneScriptLanguage",
-    "description": "Syntax highlighting and (eventually) intellisense for RuneScript.",
-    "version": "0.0.3",
+    "description": "Syntax highlighting for RuneScript.",
+    "version": "0.0.4",
     "engines": {
         "vscode": "*"
     },
@@ -44,7 +44,6 @@
                     ".loc",
                     ".mesanim",
                     ".npc",
-                    ".obj",
                     ".param",
                     ".seq",
                     ".struct",
@@ -52,6 +51,16 @@
                     ".varp"
                 ],
                 "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "objconfig",
+                "aliases": [
+                    "Object Config"
+                ],
+                "extensions": [
+                    ".obj"
+                ],
+                "configuration": "./objconfig.language-configuration.json"
             }
         ],
         "grammars": [
@@ -64,6 +73,11 @@
                 "language": "confscript",
                 "scopeName": "source.confscript",
                 "path": "./syntaxes/confscript.tmLanguage.json"
+            },
+            {
+                "language": "objconfig",
+                "scopeName": "source.objconfig",
+                "path": "./syntaxes/objconfig.tmLanguage.json"
             }
         ]
     }
