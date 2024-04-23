@@ -45,7 +45,7 @@
                 {
                     "comment": "Config properties",
                     "name": "entity.name.type.npcconfig",
-                    "match": "^(size|recol[1-6][sd]|resizex|resizey|resizez|resizeh|resizev|wanderrange|maxrange|huntrange|attackrange|hitpoints|attack|strength|defence|magic|ranged|timer|respawnrate|hasalpha|visonmap)(?==)"
+                    "match": "^(size|recol[1-6][sd]|resizex|resizey|resizez|resizeh|resizev|wanderrange|maxrange|huntrange|attackrange|hitpoints|attack|strength|defence|magic|ranged|timer|respawnrate|hasalpha|minimap|members|givechase)(?==)"
                 },
                 {
                     "comment": "Numeric values",
@@ -55,7 +55,7 @@
                 {
                     "comment": "Boolean values, part of property",
                     "name": "variable.language.npcconfig",
-                    "match": "\\b(?<==)(yes|no)\\b"
+                    "match": "\\b(?<==)(yes|no|true|false)\\b"
                 },
                 {
                     "comment": "Constants",

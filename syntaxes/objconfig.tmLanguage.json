@@ -55,7 +55,7 @@
                 {
                     "comment": "Boolean values, part of property",
                     "name": "variable.language.objconfig",
-                    "match": "\\b(?<==)(yes|no)\\b"
+                    "match": "\\b(?<==)(yes|no|true|false)\\b"
                 },
                 {
                     "comment": "Constants",
@@ -118,6 +118,18 @@
                     "comment": "Object wearpos property values",
                     "name": "variable.language.objconfig",
                     "match": "\\b(?<==)(hat|back|front|righthand|torso|lefthand|arms|legs|head|hands|feet|jaw|ring|quiver)\\b"
+                },
+                {
+                    "comment": "Object dummyitem property values",
+                    "match": "^(dummyitem)=(graphic_only|inv_only)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.objconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.objconfig"
+                        }
+                    }
                 }
             ]
         }

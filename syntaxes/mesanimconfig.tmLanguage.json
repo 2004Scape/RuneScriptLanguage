@@ -38,7 +38,7 @@
                 {
                     "comment": "Boolean values, part of property",
                     "name": "variable.language.mesanimconfig",
-                    "match": "\\b(?<==)(yes|no)\\b"
+                    "match": "\\b(?<==)(yes|no|true|false)\\b"
                 },
                 {
                     "comment": "Constants",

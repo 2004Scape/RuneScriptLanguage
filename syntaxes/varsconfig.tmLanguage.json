@@ -1,6 +1,6 @@
 {
     "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-    "name": "varnconfig",
+    "name": "varsconfig",
     "patterns": [
         {
             "include": "#comments"
@@ -27,27 +27,27 @@
             "patterns": [
                 {
                     "comment": "[name]",
-                    "name": "entity.name.function.varnconfig",
+                    "name": "entity.name.function.varsconfig",
                     "match": "\\[\\w+\\]"
                 },
                 {
                     "comment": "Numeric values",
-                    "name": "constant.numeric.varnconfig",
+                    "name": "constant.numeric.varsconfig",
                     "match": "\\b\\d+\\b"
                 },
                 {
                     "comment": "Boolean values, part of property",
-                    "name": "variable.language.varnconfig",
+                    "name": "variable.language.varsconfig",
                     "match": "\\b(?<==)(yes|no|true|false)\\b"
                 },
                 {
                     "comment": "Constants",
-                    "name": "constant.language.varnconfig",
+                    "name": "constant.language.varsconfig",
                     "match": "\\b\\^\\w+\\b"
                 },
                 {
                     "comment": "Coord values",
-                    "name": "constant.numeric.varnconfig",
+                    "name": "constant.numeric.varsconfig",
                     "match": "\\b(\\d+_){4}\\d+\\b"
                 },
                 {
@@ -55,15 +55,15 @@
                     "match": "^(type)=(int|string|enum|obj|loc|component|namedobj|struct|boolean|coord|category|spotanim|npc|inv|synth|seq|stat|varp|player_uid|npc_uid|interface)?",
                     "captures": {
                         "1": {
-                            "name": "entity.name.type.varnconfig.key"
+                            "name": "entity.name.type.varsconfig.key"
                         },
                         "2": {
-                            "name": "variable.language.varnconfig"
+                            "name": "variable.language.varsconfig"
                         }
                     }
                 }
             ]
         }
     },
-    "scopeName": "source.varnconfig"
+    "scopeName": "source.varsconfig"
 }

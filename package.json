@@ -4,7 +4,7 @@
     "publisher": "2004scape",
     "repository": "https://github.com/2004scape/RuneScriptLanguage",
     "description": "Syntax highlighting for RuneScript.",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "engines": {
         "vscode": "*"
     },
@@ -122,6 +122,16 @@
                 ],
                 "extensions": [
                     ".varn"
+                ],
+                "configuration": "./confscript.language-configuration.json"
+            },
+            {
+                "id": "varsconfig",
+                "aliases": [
+                    "Var Shared Config"
+                ],
+                "extensions": [
+                    ".vars"
                 ],
                 "configuration": "./confscript.language-configuration.json"
             },
@@ -301,6 +311,11 @@
                 "language": "varnconfig",
                 "scopeName": "source.varnconfig",
                 "path": "./syntaxes/varnconfig.tmLanguage.json"
+            },
+            {
+                "language": "varsconfig",
+                "scopeName": "source.varsconfig",
+                "path": "./syntaxes/varsconfig.tmLanguage.json"
             },
             {
                 "language": "invconfig",

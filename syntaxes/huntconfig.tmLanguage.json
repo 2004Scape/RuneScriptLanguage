@@ -43,7 +43,7 @@
                 {
                     "comment": "Boolean values, part of property",
                     "name": "variable.language.huntconfig",
-                    "match": "\\b(?<==)(yes|no)\\b"
+                    "match": "\\b(?<==)(yes|no|true|false)\\b"
                 },
                 {
                     "comment": "Constants",
@@ -141,7 +141,7 @@
                 },
                 {
                     "comment": "Hunt find_newmode values",
-                    "match": "^(find_newmode)=(opplayer[1-5]|applayer[1-5])?",
+                    "match": "^(find_newmode)=(opplayer[1-5]|applayer[1-5]|queue[1-20])?",
                     "captures": {
                         "1": {
                             "name": "entity.name.type.huntconfig.key"
@@ -154,6 +154,18 @@
                 {
                     "comment": "Hunt nobodynear values",
                     "match": "^(nobodynear)=(keephunting|pausehunt)?",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.huntconfig.key"
+                        },
+                        "2": {
+                            "name": "variable.language.huntconfig"
+                        }
+                    }
+                },
+                {
+                    "comment": "Hunt check_notbusy values",
+                    "match": "^(check_afk)=(off|on)?",
                     "captures": {
                         "1": {
                             "name": "entity.name.type.huntconfig.key"

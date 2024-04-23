@@ -43,7 +43,7 @@
                 {
                     "comment": "Boolean values, part of property",
                     "name": "variable.language.idkconfig",
-                    "match": "\\b(?<==)(yes|no)\\b"
+                    "match": "\\b(?<==)(yes|no|true|false)\\b"
                 },
                 {
                     "comment": "Constants",

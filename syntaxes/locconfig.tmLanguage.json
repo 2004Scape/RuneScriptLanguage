@@ -45,7 +45,7 @@
                 {
                     "comment": "Config properties",
                     "name": "entity.name.type.locconfig",
-                    "match": "^(width|length|recol[1-6][sd]|walloff|ambient|contrast|mapfunction|resizex|resizey|resizez|mapscene|xoff|yoff|zoff|blockwalk|blockrange|active|hillskew|sharelight|occlude|hasalpha|mirror|shadow|forcedecor)(?==)"
+                    "match": "^(width|length|recol[1-6][sd]|wallwidth|ambient|contrast|mapfunction|resizex|resizey|resizez|mapscene|offsetx|offsety|offsetz|blockwalk|blockrange|active|hillskew|sharelight|occlude|hasalpha|mirror|shadow|forcedecor)(?==)"
                 },
                 {
                     "comment": "Numeric values",
@@ -55,7 +55,7 @@
                 {
                     "comment": "Boolean values, part of property",
                     "name": "variable.language.locconfig",
-                    "match": "\\b(?<==)(yes|no)\\b"
+                    "match": "\\b(?<==)(yes|no|true|false)\\b"
                 },
                 {
                     "comment": "Constants",
@@ -69,7 +69,7 @@
                 },
                 {
                     "comment": "Reference values",
-                    "match": "^(model|category|anim)=(.+)",
+                    "match": "^(model|category|anim|retex[1-6][sd])=(.+)",
                     "captures": {
                         "1": {
                             "name": "entity.name.type.locconfig.key"
@@ -96,7 +96,7 @@
                 },
                 {
                     "comment": "Location forceapproach values",
-                    "match": "^(forceapproach)=(top|right|bottom|left)?",
+                    "match": "^(forceapproach)=(north|east|south|west)?",
                     "captures": {
                         "1": {
                             "name": "entity.name.type.locconfig.key"
