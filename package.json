@@ -6,7 +6,7 @@
     "description": "Syntax highlighting for RuneScript.",
     "version": "0.0.7",
     "engines": {
-        "vscode": "*"
+        "vscode": "^1.75.0"
     },
     "categories": [
         "Programming Languages"
