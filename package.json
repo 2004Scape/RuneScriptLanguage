@@ -4,7 +4,7 @@
     "publisher": "2004scape",
     "repository": "https://github.com/2004scape/RuneScriptLanguage",
     "description": "Syntax highlighting for RuneScript.",
-    "version": "0.0.7",
+    "version": "0.0.9",
     "engines": {
         "vscode": "^1.75.0"
     },
