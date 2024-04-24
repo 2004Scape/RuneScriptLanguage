@@ -11,6 +11,9 @@
     "categories": [
         "Programming Languages"
     ],
+    "main": "./client/extension.js",
+    "activationEvents": [
+    ],
     "contributes": {
         "languages": [
             {
