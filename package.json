@@ -26,7 +26,27 @@
                 "extensions": [
                     ".rs2"
                 ],
-                "configuration": "./runescript.language-configuration.json"
+                "configuration": "./runescript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/rs2.png",
+                    "light": "./icons/rs2.png"
+                }
+            },
+            {
+                "id": "clientscript",
+                "aliases": [
+                    "ClientScript",
+                    "Clientscript",
+                    "clientscript"
+                ],
+                "extensions": [
+                    ".cs2"
+                ],
+                "configuration": "./runescript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/cs2.png",
+                    "light": "./icons/cs2.png"
+                }
             },
             {
                 "id": "objconfig",
@@ -36,7 +56,11 @@
                 "extensions": [
                     ".obj"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/obj.png",
+                    "light": "./icons/obj.png"
+                }
             },
             {
                 "id": "locconfig",
@@ -46,7 +70,11 @@
                 "extensions": [
                     ".loc"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/loc.png",
+                    "light": "./icons/loc.png"
+                }
             },
             {
                 "id": "npcconfig",
@@ -56,7 +84,11 @@
                 "extensions": [
                     ".npc"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/npc.png",
+                    "light": "./icons/npc.png"
+                }
             },
             {
                 "id": "dbtableconfig",
@@ -66,7 +98,11 @@
                 "extensions": [
                     ".dbtable"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/dbtable.png",
+                    "light": "./icons/dbtable.png"
+                }
             },
             {
                 "id": "dbrowconfig",
@@ -76,7 +112,11 @@
                 "extensions": [
                     ".dbrow"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/dbrow.png",
+                    "light": "./icons/dbrow.png"
+                }
             },
             {
                 "id": "paramconfig",
@@ -86,7 +126,11 @@
                 "extensions": [
                     ".param"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/param.png",
+                    "light": "./icons/param.png"
+                }
             },
             {
                 "id": "structconfig",
@@ -96,7 +140,11 @@
                 "extensions": [
                     ".struct"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/struct.png",
+                    "light": "./icons/struct.png"
+                }
             },
             {
                 "id": "enumconfig",
@@ -106,7 +154,11 @@
                 "extensions": [
                     ".enum"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/enum.png",
+                    "light": "./icons/enum.png"
+                }
             },
             {
                 "id": "varpconfig",
@@ -116,7 +168,11 @@
                 "extensions": [
                     ".varp"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/varp.png",
+                    "light": "./icons/varp.png"
+                }
             },
             {
                 "id": "varnconfig",
@@ -126,7 +182,11 @@
                 "extensions": [
                     ".varn"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/varn.png",
+                    "light": "./icons/varn.png"
+                }
             },
             {
                 "id": "varsconfig",
@@ -136,7 +196,11 @@
                 "extensions": [
                     ".vars"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/vars.png",
+                    "light": "./icons/vars.png"
+                }
             },
             {
                 "id": "invconfig",
@@ -146,7 +210,11 @@
                 "extensions": [
                     ".inv"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/inv.png",
+                    "light": "./icons/inv.png"
+                }
             },
             {
                 "id": "seqconfig",
@@ -156,7 +224,11 @@
                 "extensions": [
                     ".seq"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/seq.png",
+                    "light": "./icons/seq.png"
+                }
             },
             {
                 "id": "spotanimconfig",
@@ -166,7 +238,11 @@
                 "extensions": [
                     ".spotanim"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/spotanim.png",
+                    "light": "./icons/spotanim.png"
+                }
             },
             {
                 "id": "mesanimconfig",
@@ -176,7 +252,11 @@
                 "extensions": [
                     ".mesanim"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/mesanim.png",
+                    "light": "./icons/mesanim.png"
+                }
             },
             {
                 "id": "idkconfig",
@@ -186,7 +266,11 @@
                 "extensions": [
                     ".idk"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/idk.png",
+                    "light": "./icons/idk.png"
+                }
             },
             {
                 "id": "huntconfig",
@@ -196,7 +280,11 @@
                 "extensions": [
                     ".hunt"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/hunt.png",
+                    "light": "./icons/hunt.png"
+                }
             },
             {
                 "id": "constants",
@@ -206,7 +294,11 @@
                 "extensions": [
                     ".constant"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/constant.png",
+                    "light": "./icons/constant.png"
+                }
             },
             {
                 "id": "interface",
@@ -216,7 +308,11 @@
                 "extensions": [
                     ".if"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/if.png",
+                    "light": "./icons/if.png"
+                }
             },
             {
                 "id": "floconfig",
@@ -226,7 +322,11 @@
                 "extensions": [
                     ".flo"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/flo.png",
+                    "light": "./icons/flo.png"
+                }
             },
             {
                 "id": "pack",
@@ -236,7 +336,11 @@
                 "extensions": [
                     ".pack"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/pack.png",
+                    "light": "./icons/pack.png"
+                }
             },
             {
                 "id": "packorder",
@@ -246,7 +350,11 @@
                 "extensions": [
                     ".order"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/order.png",
+                    "light": "./icons/order.png"
+                }
             },
             {
                 "id": "opt",
@@ -256,7 +364,25 @@
                 "extensions": [
                     ".opt"
                 ],
-                "configuration": "./confscript.language-configuration.json"
+                "configuration": "./confscript.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/opt.png",
+                    "light": "./icons/opt.png"
+                }
+            },
+            {
+                "id": "jm2",
+                "aliases": [
+                    "Map"
+                ],
+                "extensions": [
+                    ".jm2"
+                ],
+                "configuration": "./jm2.language-configuration.json",
+                "icon": {
+                    "dark": "./icons/jm2.png",
+                    "light": "./icons/jm2.png"
+                }
             }
         ],
         "grammars": [
@@ -379,6 +505,11 @@
                 "language": "opt",
                 "scopeName": "source.opt",
                 "path": "./syntaxes/opt.tmLanguage.json"
+            },
+            {
+                "language": "jm2",
+                "scopeName": "source.jm2",
+                "path": "./syntaxes/jm2.tmLanguage.json"
             }
         ]
     }

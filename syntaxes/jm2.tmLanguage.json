@@ -1,0 +1,30 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "jm2",
+    "patterns": [
+        {
+            "comment": "Map section",
+            "name": "variable.language.jm2",
+            "match": "==== (MAP|LOC|NPC|OBJ) ===="
+        },
+        {
+            "comment": "Map coord data",
+            "match": "(\\d+) (\\d+) (\\d+): (.*)",
+            "captures": {
+                "1": {
+                    "name": "constant.numeric.jm2"
+                },
+                "2": {
+                    "name": "constant.numeric.jm2"
+                },
+                "3": {
+                    "name": "constant.numeric.jm2"
+                },
+                "5": {
+                    "name": "variable.language.jm2"
+                }
+            }
+        }
+    ],
+    "scopeName": "source.jm2"
+}
