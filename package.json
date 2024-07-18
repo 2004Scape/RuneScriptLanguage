@@ -513,11 +513,11 @@
                 "path": "./syntaxes/jm2.tmLanguage.json"
             }
         ],
-		"snippets": [
-			{
-				"language": "runescript",
-				"path": "./snippets/snippets.json"
-			}
-		]
+        "snippets": [
+            {
+                "language": "runescript",
+                "path": "./snippets/snippets.json"
+            }
+        ]
     }
 }
