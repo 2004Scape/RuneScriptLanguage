@@ -103,6 +103,11 @@
                 {
                     "name": "variable.language.runescript",
                     "match": "\\b(def_(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|queue|weakqueue|timer|softtimer|char|dbcolumn|proc|label))\\b"
+                },
+                {
+                    "comment": "",
+                    "name": "keyword.control.runescript",
+                    "match": "(?<=\\<)\\w+\\(?=\\>)"
                 }
             ]
         },
@@ -114,6 +119,11 @@
                 {
                     "name": "constant.character.escape.runescript",
                     "match": "\\\\."
+                },
+                {
+                    "comment": "Highlight occurences of <> inside strings.",
+                    "name": "entity.name.function.runescript",
+                    "match": "\\<([^\\<]+)\\>"
                 }
             ]
         }
