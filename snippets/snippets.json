@@ -1,0 +1,217 @@
+{
+    "Chat Npc": {
+        "prefix": "chatnpc",
+        "body": "~chatnpc(\"<p,${1|happy,bored,short,neutral,shock,confused,silent,quiz,default,shifty,worried,drunk,verymad,laugh,madlaugh,sad,angry|}>${2:text}\");",
+        "scope": "runescript",
+        "description": "A shortcut for the chatnpc proc."
+    },
+    "Chat Player": {
+        "prefix": "chatplayer",
+        "body": "~chatplayer(\"<p,${1|happy,bored,short,neutral,shock,confused,silent,quiz,default,shifty,worried,drunk,verymad,laugh,madlaugh,sad,angry|}>${2:text}\");",
+        "scope": "runescript",
+        "description": "A shortcut for the chatplayer proc."
+    },
+    "Message": {
+        "prefix": "mes",
+        "body": "mes(\"${1:text}\");",
+        "scope": "runescript",
+        "description": "A shortcut for a message in the chatbox."
+    },
+    "Message Box": {
+        "prefix": "mesbox",
+        "body": "~mesbox(\"${1:text}\");",
+        "scope": "runescript",
+        "description": "A shortcut for a message interface in the chatbox."
+    },
+    "Object Box": {
+        "prefix": "objbox",
+        "body": "~objbox(${1:item_name}, \"${2:text}\");",
+        "scope": "runescript",
+        "description": "A shortcut for a message interface with an item in the chatbox."
+    },
+    "Object Box Top": {
+        "prefix": "objboxt",
+        "body": "~objboxt(${1:item_name}, \"${2:text}\");",
+        "scope": "runescript",
+        "description": "A shortcut for a message interface with an item aligned to the top in the chatbox."
+    },
+    "Object Box Bottom": {
+        "prefix": "objboxb",
+        "body": "~objboxb(${1:item_name}, \"${2:text}\");",
+        "scope": "runescript",
+        "description": "A shortcut for a message interface with an item aligned to the bottom in the chatbox."
+    },
+    ,
+    "Double Object Box": {
+        "prefix": "doubleobjbox",
+        "body": "~doubleobjbox(${1:item_name}, ${2:item_name}, \"${3:text}\");",
+        "scope": "runescript",
+        "description": "A shortcut for a message interface with two items in the chatbox."
+    },
+    "Multi2": {
+        "prefix": "multi2",
+        "body": [
+            "@multi2(",
+            "\t\"${1:option 1}\", ${2:label_1},",
+            "\t\"${3:option 2}\", ${4:label_2}",
+            ");"
+        ],
+        "scope": "runescript",
+        "description": "A shortcut for the dialogue option interface with two options."
+    },
+    "Multi3": {
+        "prefix": "multi3",
+        "body": [
+            "@multi3(",
+            "\t\"${1:option 1}\", ${2:label_1},",
+            "\t\"${3:option 2}\", ${4:label_2}",
+            "\t\"${5:option 3}\", ${6:label_3}",
+            ");"
+        ],
+        "scope": "runescript",
+        "description": "A shortcut for the dialogue option interface with three options."
+    },
+    "Multi4": {
+        "prefix": "multi4",
+        "body": [
+            "@multi4(",
+            "\t\"${1:option 1}\", ${2:label_1},",
+            "\t\"${3:option 2}\", ${4:label_2}",
+            "\t\"${5:option 3}\", ${6:label_3}",
+            "\t\"${7:option 4}\", ${8:label_4}",
+            ");"
+        ],
+        "scope": "runescript",
+        "description": "A shortcut for the dialogue option interface with four options."
+    },
+    "Multi5": {
+        "prefix": "multi5",
+        "body": [
+            "@multi5(",
+            "\t\"${1:option 1}\", ${2:label_1},",
+            "\t\"${3:option 2}\", ${4:label_2}",
+            "\t\"${5:option 3}\", ${6:label_3}",
+            "\t\"${7:option 4}\", ${8:label_4}",
+            "\t\"${9:option 5}\", ${10:label_5}",
+            ");"
+        ],
+        "scope": "runescript",
+        "description": "A shortcut for the dialogue option interface with five options."
+    },
+    "Multi2 Header": {
+        "prefix": "multi2_header",
+        "body": [
+            "@multi2_header(",
+            "\t\"${1:option 1}\", ${2:label_1},",
+            "\t\"${3:option 2}\", ${4:label_2}",
+            "\t\"${5:header}\"",
+            ");"
+        ],
+        "scope": "runescript",
+        "description": "A shortcut for the dialogue option interface with two options with an updatable header."
+    },
+    "Multi3 Header": {
+        "prefix": "multi3_header",
+        "body": [
+            "@multi3_header(",
+            "\t\"${1:option 1}\", ${2:label_1},",
+            "\t\"${3:option 2}\", ${4:label_2}",
+            "\t\"${5:option 3}\", ${6:label_3}",
+            "\t\"${7:header}\"",
+            ");"
+        ],
+        "scope": "runescript",
+        "description": "A shortcut for the dialogue option interface with three options with an updatable header."
+    },
+    "Multi4 Header": {
+        "prefix": "multi4_header",
+        "body": [
+            "@multi4_header(",
+            "\t\"${1:option 1}\", ${2:label_1},",
+            "\t\"${3:option 2}\", ${4:label_2}",
+            "\t\"${5:option 3}\", ${6:label_3}",
+            "\t\"${7:option 4}\", ${8:label_4}",
+            "\t\"${9:header}\"",
+            ");"
+        ],
+        "scope": "runescript",
+        "description": "A shortcut for the dialogue option interface with four options with an updatable header."
+    },
+    "Multi5 Header": {
+        "prefix": "multi5_header",
+        "body": [
+            "@multi5_header(",
+            "\t\"${1:option 1}\", ${2:label_1},",
+            "\t\"${3:option 2}\", ${4:label_2}",
+            "\t\"${5:option 3}\", ${6:label_3}",
+            "\t\"${7:option 4}\", ${8:label_4}",
+            "\t\"${9:option 5}\", ${10:label_5}",
+            "\t\"${11:header}\"",
+            ");"
+        ],
+        "scope": "runescript",
+        "description": "A shortcut for the dialogue option interface with five options with an updatable header."
+    },
+    "Label": {
+        "prefix": "label",
+        "body": [
+            "[label,${1:label_name}]",
+            "$2"            
+        ],
+        "scope": "runescript",
+        "description": "A shortcut creating a new label."
+    },
+    "Proc": {
+        "prefix": "proc",
+        "body": [
+            "[proc,${1:proc_name}]",
+            "$2"            
+        ],
+        "scope": "runescript",
+        "description": "A shortcut for creating a new proc."
+    },
+    "Label with Params": {
+        "prefix": "label (params)",
+        "body": [
+            "[label,${1:label_name}](${2:params})",
+            "$3"            
+        ],
+        "scope": "runescript",
+        "description": "A shortcut creating a new label with params."
+    },
+    "Proc with params": {
+        "prefix": "proc (params)",
+        "body": [
+            "[proc,${1:proc_name}](${2:params})(${3:return_value})",
+            "$4"            
+        ],
+        "scope": "runescript",
+        "description": "A shortcut for creating a new proc with params."
+    },
+    "Drops": {
+        "prefix": "drop",
+        "body": [
+            "[ai_queue3,${1:npc}]",
+            "gosub(npc_death);",            
+            "if (npc_findhero = false) {",
+            "\treturn;",
+            "}",
+            "// Default drop from config.",
+            "obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);",
+            "",
+            "def_int $$random = random(${2:roll});",
+            "",
+            "if ($$random < ${3:chance}) {",
+            "\tobj_add(npc_coord, ${4:drop}, 1, ^lootdrop_duration);",
+            "}"
+        ],
+        "scope": "runescript",
+        "description": "Generate the skeleton for drops file."
+    },
+    "Give Xp": {
+        "prefix": "givexp",
+        "body": "givexp(${1|attack,defence,strength,hitpoints,ranged,prayer,magic,woodcutting,fletching,fishing,firemaking,crafting,smithing,mining,herblore,agility,thieving,runecraft|}, ${2:100});",
+        "scope": "runescript",
+        "description": "A shortcut for givexp command."
+    }
+}
