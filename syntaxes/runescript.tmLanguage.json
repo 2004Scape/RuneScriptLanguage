@@ -114,6 +114,11 @@
                 {
                     "name": "constant.character.escape.runescript",
                     "match": "\\\\."
+                },
+                {
+                    "comment": "Highlight occurences of <> inside strings.",
+                    "name": "entity.name.function.runescript",
+                    "match": "\\<([^\\<]+)\\>"
                 }
             ]
         }
