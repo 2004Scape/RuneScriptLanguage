@@ -11,10 +11,8 @@ const runescriptDefinitionProvider = {
         }
 
         switch (match.id) {
-            case matchType.LOCAL_VAR.id: 
-                return gotoLocalVar(document, word);
-            case matchType.GLOBAL_VAR.id: case matchType.CONSTANT.id: case matchType.LABEL.id: case matchType.PROC.id: case matchType.QUEUE.id: case matchType.TIMER.id: case matchType.SOFTTIMER.id: 
-                return await gotoDefinition(match, word);
+            case matchType.LOCAL_VAR.id: return gotoLocalVar(document, word);
+            default: return await gotoDefinition(match, word);
         }
     }
 }
@@ -29,7 +27,7 @@ const gotoLocalVar = (document, word) => {
 
 const gotoDefinition = async (match, word) => {
 	// Might want to switch to findTextInFiles when released https://github.com/microsoft/vscode/issues/59921#issuecomment-2231630101
-	if (!match.definitionFiles || !match.definitionFormat) {
+	if (!match || !match.definitionFiles || !match.definitionFormat) {
 		return null;
 	}
 	let inclusions = [];

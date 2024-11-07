@@ -111,9 +111,34 @@ function getCommaMatchType(prevWord) {
 
 function getOpenParenthesisMatchType(prevWord) {
 	switch (prevWord) {
-		case "queue": return matchType.QUEUE;
-		case "settimer": case "cleartimer": return matchType.TIMER;
-		case "softtimer": case "clearsofttimer": return matchType.SOFTTIMER;
+		case "queue": case "getqueue": case "clearqueue": case "weakqueue": case "strongqueue":
+			return matchType.QUEUE;
+		case "settimer": case "cleartimer": case "gettimer":
+			return matchType.TIMER;
+		case "softtimer": case "clearsofttimer": 
+			return matchType.SOFTTIMER;
+		case "npc_sethuntmode": 
+			return matchType.HUNT;
+		case "enum_getoutputcount":
+			return matchType.ENUM;
+		case "gosub":
+			return matchType.PROC;
+		case "jump":
+			return matchType.LABEL;
+		case "anim": case "loc_anim": case "npc_anim": case "bas_readyanim": case "bas_running": case "bas_turnonspot": case "bas_walk_f": case "bas_walk_b": case "bas_walk_l": case "bas_walk_r": case "seqlength": 
+			return matchType.SEQ;
+		case "spotanim_npc": case "spotanim_map": case "spotanim_pl": 
+			return matchType.SPOTANIM;
+		case "loc_change": case "loc_type": case "lc_name": case "lc_param": case "lc_width": case "lc_length": case "lc_debugname": case "lc_desc": case "lc_debugname": 
+			return matchType.LOC;
+		case "npc_changetype": case "nc_name": case "nc_param": case "nc_category": case "nc_desc": case "nc_debugname": case "nc_op": 
+			return matchType.NPC;
+		case "oc_name": case "oc_param": case "oc_category": case "oc_desc": case "oc_members": case "oc_weight": case "oc_wearpos": case "oc_wearpos2": case "oc_wearpos3": case "oc_cost": case "oc_tradeable": case "oc_debugname": case "oc_cert": case "oc_uncert": case "oc_stackable":
+			return matchType.OBJ;
+		case "db_getfieldcount": case "db_getrowtable":
+			return matchType.DBROW;
+		case "db_find": case "db_listall": case "db_listall_with_count":
+			return matchType.DBTABLE;
 	}
 	return matchType.UNKNOWN;
 }
