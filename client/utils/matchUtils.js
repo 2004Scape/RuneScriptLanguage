@@ -34,6 +34,10 @@ const matchWord = (document, position) => {
 
   return {
     "word": word,
+    "fileType": fileType,
+    "prevWord": prevWord,
+    "identifier": identifier,
+    "lineText": lineText,
     "match": match
   }
 }

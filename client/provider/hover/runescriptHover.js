@@ -7,7 +7,7 @@ const matchType = require('../../enum/MatchType');
 const runescriptHoverProvider = function(context) {
   return {
     async provideHover(document, position, token) {
-      const { word, match } = matchUtils.matchWord(document, position);
+      const { word, lineText, prevWord, match } = matchUtils.matchWord(document, position);
       if (!word) {
         return null;
       }
@@ -19,10 +19,16 @@ const runescriptHoverProvider = function(context) {
       content.baseUri = vscode.Uri.file(path.join(context.extensionPath, 'icons', path.sep)); 
 
       switch (match.id) {
-        case matchType.LOCAL_VAR.id: buildLocalVarHoverText(document, position, word, content); break;
-        case matchType.CONSTANT.id: await buildConstantHoverText(word, content); break;
-        case matchType.GLOBAL_VAR.id: await buildGlobalVarHoverText(word, content); break;
-        default: buildHoverText(match, word, content);
+        case matchType.LOCAL_VAR.id: 
+          buildLocalVarHoverText(document, position, word, content); break;
+        case matchType.CONSTANT.id: 
+          await buildConstantHoverText(word, content); break;
+        case matchType.GLOBAL_VAR.id: 
+          await buildGlobalVarHoverText(word, content); break;
+        case matchType.PROC_DECLARATION.id: case matchType.LABEL_DECLARATION.id: case matchType.QUEUE_DECLARATION.id: case matchType.TIMER_DECLARATION.id: case matchType.SOFTTIMER_DECLARATION.id:
+          buildBlockDefinitionHoverText(word, prevWord, lineText, content);
+        default: 
+          buildDefaultHoverText(match, word, content);
       }
 
       if (content.value.length) {
@@ -33,8 +39,6 @@ const runescriptHoverProvider = function(context) {
 }
 
 function buildLocalVarHoverText(document, position, word, content) {
-  // rs2 LOCAL_VAR def_int $name1 = $othervar
-  // rs2 LOCAL_VAR input parameter (int $name)
   const varKeyword = "(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|queue|weakqueue|timer|softtimer|char|dbcolumn|proc|label)\\b";
   const fileText = document.getText(new vscode.Range(new vscode.Position(0, 0), position));
   const matches = [...fileText.matchAll(new RegExp(`${varKeyword} \\$${word}(,|;|=|\\)| ){1}`, "g"))];
@@ -47,7 +51,7 @@ function buildLocalVarHoverText(document, position, word, content) {
     const lineText = getRestOfLineFromIndex(fileText, match.index);
     displayText = `input parameter (${lineText.substring(0, lineText.indexOf(word) + word.length)})`;
   }
-  content.appendMarkdown(`<img src="rs2.png">&ensp;<b>LOCAL_VAR</b>&ensp;${displayText}`);
+  appendMarkdown(content, "LOCAL_VAR", displayText, "rs2");
 }
 
 async function buildConstantHoverText(word, content) {
@@ -57,7 +61,7 @@ async function buildConstantHoverText(word, content) {
     const fileText = fs.readFileSync(fileUri.path, "utf8");
     const index = fileText.indexOf(`^${word}`);
     if (index >= 0) {
-      content.appendMarkdown(`<img src="constant.png">&ensp;<b>CONSTANT</b>&ensp;${getRestOfLineFromIndex(fileText, index)}`);
+      appendMarkdown(content, "constant", getRestOfLineFromIndex(fileText, index), "constant");
       return true;
     }
   });
@@ -76,15 +80,32 @@ async function buildGlobalVarHoverText(word, content) {
       return true;
     }
   });
-  content.appendMarkdown(`<img src="${fileType}.png">&ensp;<b>${fileType.toUpperCase()}</b>&ensp;${definition}`);
-
+  appendMarkdown(content, fileType, definition, fileType);
 }
 
-function buildHoverText(match, word, content) {
+function buildBlockDefinitionHoverText(name, blockType, lineText, content) {
+  appendMarkdown(content, blockType, name, "rs2");
+  const split = lineText.split('(');
+  if (split.length > 1 && split[1].length > 1) {
+    content.appendMarkdown('\n---');
+    content.appendMarkdown('\n<b>params:</b> <i>' + split[1].slice(0, -1) + '</i>\n');
+  }
+  if (split.length > 2 && split[2].length > 1) {
+    if (split[1].length === 1) content.appendMarkdown('\n---');
+    content.appendMarkdown('\n<b>returns:</b> <i>' + split[2].slice(0, -1) + '</i>\n');
+  }
+}
+
+function buildDefaultHoverText(match, word, content) {
   if (!match || !match.definitionFormat || !match.definitionFiles) {
     return;
   }
-  content.appendMarkdown(`<img src="${match.definitionFiles[0]}.png">&ensp;<b>${match.id}</b>&ensp;${match.definitionFormat.replace("NAME", word)}\n`);
+  appendMarkdown(content, match.id, match.definitionFormat.replace("NAME", word), match.definitionFiles[0]);
+}
+
+function appendMarkdown(content, type, text, icon) {
+  icon = icon || "rs2";
+  content.appendMarkdown(`<img src="${icon}.png">&ensp;<b>${type.toUpperCase()}</b>&ensp;${text}\n`);
 }
 
 function getRestOfLineFromIndex(input, index) {
