@@ -9,7 +9,8 @@
         "vscode": "^1.75.0"
     },
     "categories": [
-        "Programming Languages"
+        "Programming Languages",
+        "Snippets"
     ],
     "main": "./client/extension.js",
     "activationEvents": [
@@ -510,6 +511,12 @@
                 "language": "jm2",
                 "scopeName": "source.jm2",
                 "path": "./syntaxes/jm2.tmLanguage.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "runescript",
+                "path": "./snippets/snippets.json"
             }
         ]
     }
