@@ -21,6 +21,7 @@ const runescriptHoverProvider = function(context) {
       switch (match.id) {
         case matchType.LOCAL_VAR.id: buildLocalVarHoverText(document, position, word, content); break;
         case matchType.CONSTANT.id: await buildConstantHoverText(word, content); break;
+        case matchType.GLOBAL_VAR.id: await buildGlobalVarHoverText(word, content); break;
         default: buildHoverText(match, word, content);
       }
 
@@ -60,6 +61,23 @@ async function buildConstantHoverText(word, content) {
       return true;
     }
   });
+}
+
+async function buildGlobalVarHoverText(word, content) {
+  const exclude = "{**​/node_modules/**,**/ref/**,**/public/**,**/pack/**,**/3rdparty/**,**/jagex2/**,**/lostcity/**}";
+  const files = await vscode.workspace.findFiles('{**/*.varn,**/*.vars}', exclude);
+  const definition = `[${word}]`;
+  let fileType = 'varp';
+  files.some(fileUri => {
+    const fileText = fs.readFileSync(fileUri.path, "utf8");
+    const index = fileText.indexOf(definition);
+    if (index >= 0) {
+      fileType = fileUri.path.split(/[#?]/)[0].split('.').pop().trim();
+      return true;
+    }
+  });
+  content.appendMarkdown(`<img src="${fileType}.png">&ensp;<b>${fileType.toUpperCase()}</b>&ensp;${definition}`);
+
 }
 
 function buildHoverText(match, word, content) {

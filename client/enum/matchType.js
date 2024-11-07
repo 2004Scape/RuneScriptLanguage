@@ -1,7 +1,7 @@
 const matchType = {
   UNKNOWN: {id: 'UNKNOWN'},
   LOCAL_VAR: {id: 'LOCAL_VAR'},
-  GLOBAL_VAR: {id: 'GLOBAL_VAR', definitionFiles: ["varp", "varn", "varns"], definitionFormat: '[NAME]'},
+  GLOBAL_VAR: {id: 'GLOBAL_VAR', definitionFiles: ["varp", "varn", "vars"], definitionFormat: '[NAME]'},
   CONSTANT: {id: 'CONSTANT', definitionFiles: ["constant"], definitionFormat: '^NAME'},
   LABEL: {id: 'LABEL', definitionFiles: ["rs2"], definitionFormat: '[label,NAME]'},
   PROC: {id: 'PROC', definitionFiles: ["rs2"], definitionFormat: '[proc,NAME]'},
