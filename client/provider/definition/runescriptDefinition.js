@@ -1,6 +1,6 @@
 const vscode = require('vscode');
-const fs = require('fs');
 const matchUtils = require('../../utils/matchUtils');
+const searchUtils = require('../../utils/searchUtils');
 const matchType = require('../../enum/MatchType');
 
 const runescriptDefinitionProvider = {
@@ -12,44 +12,33 @@ const runescriptDefinitionProvider = {
 
     switch (match.id) {
       case matchType.LOCAL_VAR.id: return gotoLocalVar(document, position, word);
+      case matchType.INTERFACE.id: return gotoInterface(match, word);
       default: return await gotoDefinition(match, word);
     }
   }
 }
 
 const gotoLocalVar = (document, position, word) => {
-  const varKeyword = "(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|queue|weakqueue|timer|softtimer|char|dbcolumn|proc|label)\\b";
   const fileText = document.getText(new vscode.Range(new vscode.Position(0, 0), position));
-  const matches = [...fileText.matchAll(new RegExp(`${varKeyword} \\$${word}(,|;|=|\\)| ){1}`, "g"))];
-  const match = matches[matches.length - 1];
+  const match = searchUtils.searchLocalVar(fileText, word);
   return !match ? null : new vscode.Location(document.uri, document.positionAt(match.index).translate(0, match[1].length + 1));
 }
 
-const gotoDefinition = async (match, word) => {
-  // Might want to switch to findTextInFiles when released https://github.com/microsoft/vscode/issues/59921#issuecomment-2231630101
+const gotoInterface = async (match, word) => {
   if (!match || !match.definitionFiles || !match.definitionFormat) {
     return null;
   }
-  let inclusions = [];
-  match.definitionFiles.forEach(fileType => inclusions.push(`**/*.${fileType}`));
-  const exclude = "{**​/node_modules/**,**/ref/**,**/public/**,**/pack/**,**/3rdparty/**,**/jagex2/**,**/lostcity/**}";
-  const files = await vscode.workspace.findFiles('{' + inclusions.join(",") + '}', exclude);
+  return searchUtils.searchFile(match.definitionFormat.replace("NAME", word), "interface.pack", 0);
+}
 
-  let matchingFileUri;
-  let matchingFilePosition;
-  const definitionText = match.definitionFormat.replace("NAME", word);
-  files.some(fileUri => {
-    const fileText = fs.readFileSync(fileUri.path, "utf8");
-    const index = fileText.indexOf(definitionText);
-    if (index >= 0) {
-      matchingFileUri = fileUri;
-      const split = fileText.slice(0, index).split(/\r\n|\r|\n/g);
-      const lineNum = split ? split.length - 1 : 0;
-      const lineIndex = split[lineNum].length + definitionText.indexOf(word);
-      matchingFilePosition = new vscode.Position(lineNum, lineIndex);
-    }
-  })
-  return !matchingFileUri ? null : new vscode.Location(matchingFileUri, matchingFilePosition);
+const gotoDefinition = async (match, word) => {
+  if (!match || !match.definitionFiles || !match.definitionFormat) {
+    return null;
+  }
+  const pattern = match.definitionFormat.replace("NAME", word);
+  const offset = match.definitionFormat.indexOf("NAME");
+  const results = await searchUtils.searchFiles(pattern, match.definitionFiles, offset, 1);
+  return (!results || results.length === 0) ? null : results[0].location;
 }
 
 module.exports = runescriptDefinitionProvider;

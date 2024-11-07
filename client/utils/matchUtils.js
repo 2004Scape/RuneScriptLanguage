@@ -110,6 +110,13 @@ function getCommaMatchType(prevWord) {
     case "queue": return matchType.QUEUE_DECLARATION;
     case "timer": return matchType.TIMER_DECLARATION;
     case "softtimer": return matchType.SOFTTIMER_DECLARATION;
+    case "opplayeru": case "applayeru": return matchType.OBJ;
+    case "opnpct": case "opplayert": case "apnpct": case "applayert": return matchType.INTERFACE;
+  }
+  switch (prevWord.substring(0, Math.min(5, prevWord.length))) {
+    case "oploc": case "aploc": return matchType.LOC;
+    case "ophel": case "opobj": return matchType.OBJ;
+    case "opnpc": case "ai_qu": case "ai_ap": case "ai_ti": return matchType.NPC;
   }
   return matchType.UNKNOWN;
 }

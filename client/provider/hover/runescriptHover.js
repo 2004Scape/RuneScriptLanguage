@@ -1,7 +1,8 @@
 const vscode = require('vscode');
 const path = require('path');
-const fs = require('fs');
 const matchUtils = require('../../utils/matchUtils');
+const stringUtils = require('../../utils/stringUtils');
+const searchUtils = require('../../utils/searchUtils');
 const matchType = require('../../enum/MatchType');
 
 const runescriptHoverProvider = function(context) {
@@ -20,13 +21,20 @@ const runescriptHoverProvider = function(context) {
 
       switch (match.id) {
         case matchType.LOCAL_VAR.id: 
-          buildLocalVarHoverText(document, position, word, content); break;
+          buildLocalVarHoverText(document, position, word, content); 
+          break;
         case matchType.CONSTANT.id: 
-          await buildConstantHoverText(word, content); break;
+          await buildConstantHoverText(word, content); 
+          break;
         case matchType.GLOBAL_VAR.id: 
-          await buildGlobalVarHoverText(word, content); break;
+          await buildGlobalVarHoverText(word, content); 
+          break;
         case matchType.PROC_DECLARATION.id: case matchType.LABEL_DECLARATION.id: case matchType.QUEUE_DECLARATION.id: case matchType.TIMER_DECLARATION.id: case matchType.SOFTTIMER_DECLARATION.id:
-          buildBlockDefinitionHoverText(word, prevWord, lineText, content);
+          buildBlockDefinitionHoverText(word, prevWord, lineText, content); 
+          break;
+        case matchType.LABEL.id: case matchType.PROC.id: case matchType.QUEUE.id:
+          await buildBlockReferenceHoverText(word, match, content); 
+          break;
         default: 
           buildDefaultHoverText(match, word, content);
       }
@@ -39,47 +47,30 @@ const runescriptHoverProvider = function(context) {
 }
 
 function buildLocalVarHoverText(document, position, word, content) {
-  const varKeyword = "(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|queue|weakqueue|timer|softtimer|char|dbcolumn|proc|label)\\b";
   const fileText = document.getText(new vscode.Range(new vscode.Position(0, 0), position));
-  const matches = [...fileText.matchAll(new RegExp(`${varKeyword} \\$${word}(,|;|=|\\)| ){1}`, "g"))];
-  const match = matches[matches.length - 1];
+  const match = searchUtils.searchLocalVar(fileText, word);
   const isDef = fileText.substring(Math.max(match.index - 4, 0), match.index) === "def_";
   let displayText;
   if (isDef) {
-    displayText = getRestOfLineFromIndex(fileText, match.index - 4);
+    displayText = stringUtils.getLineText(fileText.substring(match.index - 4));
   } else {
-    const lineText = getRestOfLineFromIndex(fileText, match.index);
+    const lineText = stringUtils.getLineText(fileText.substring(match.index));
     displayText = `input parameter (${lineText.substring(0, lineText.indexOf(word) + word.length)})`;
   }
   appendMarkdown(content, "LOCAL_VAR", displayText, "rs2");
 }
 
 async function buildConstantHoverText(word, content) {
-  const exclude = "{**​/node_modules/**,**/ref/**,**/public/**,**/pack/**,**/3rdparty/**,**/jagex2/**,**/lostcity/**}";
-  const files = await vscode.workspace.findFiles('**/*.constant', exclude);
-  files.some(fileUri => {
-    const fileText = fs.readFileSync(fileUri.path, "utf8");
-    const index = fileText.indexOf(`^${word}`);
-    if (index >= 0) {
-      appendMarkdown(content, "constant", getRestOfLineFromIndex(fileText, index), "constant");
-      return true;
-    }
-  });
+  const results = await searchUtils.searchFiles(`^${word}`, ["constant"], 0, 1);
+  if (results && results.length > 0) {
+    appendMarkdown(content, "constant", results[0].lineText, "constant");
+  }
 }
 
 async function buildGlobalVarHoverText(word, content) {
-  const exclude = "{**​/node_modules/**,**/ref/**,**/public/**,**/pack/**,**/3rdparty/**,**/jagex2/**,**/lostcity/**}";
-  const files = await vscode.workspace.findFiles('{**/*.varn,**/*.vars}', exclude);
   const definition = `[${word}]`;
-  let fileType = 'varp';
-  files.some(fileUri => {
-    const fileText = fs.readFileSync(fileUri.path, "utf8");
-    const index = fileText.indexOf(definition);
-    if (index >= 0) {
-      fileType = fileUri.path.split(/[#?]/)[0].split('.').pop().trim();
-      return true;
-    }
-  });
+  const results = await searchUtils.searchFiles(definition, ["varn", "vars"], 0, 1);
+  const fileType = results.length > 0 ? results[0].location.uri.path.split(/[#?]/)[0].split('.').pop().trim() : 'varp';
   appendMarkdown(content, fileType, definition, fileType);
 }
 
@@ -88,11 +79,20 @@ function buildBlockDefinitionHoverText(name, blockType, lineText, content) {
   const split = lineText.split('(');
   if (split.length > 1 && split[1].length > 1) {
     content.appendMarkdown('\n---');
-    content.appendMarkdown('\n<b>params:</b> <i>' + split[1].slice(0, -1) + '</i>\n');
+    content.appendMarkdown('\n<b>params:</b> <i>' + split[1].substring(0, split[1].indexOf(')')) + '</i>\n');
   }
   if (split.length > 2 && split[2].length > 1) {
     if (split[1].length === 1) content.appendMarkdown('\n---');
-    content.appendMarkdown('\n<b>returns:</b> <i>' + split[2].slice(0, -1) + '</i>\n');
+    content.appendMarkdown('\n<b>returns:</b> <i>' + split[2].substring(0, split[2].indexOf(')'))  + '</i>\n');
+  }
+}
+
+async function buildBlockReferenceHoverText(word, match, content) {
+  const pattern = match.definitionFormat.replace("NAME", word);
+  const offset = match.definitionFormat.indexOf("NAME");
+  const results = await searchUtils.searchFiles(pattern, match.definitionFiles, offset, 1);
+  if (results && results.length > 0) {
+    buildBlockDefinitionHoverText(word, match.id, results[0].lineText, content);
   }
 }
 
@@ -106,12 +106,6 @@ function buildDefaultHoverText(match, word, content) {
 function appendMarkdown(content, type, text, icon) {
   icon = icon || "rs2";
   content.appendMarkdown(`<img src="${icon}.png">&ensp;<b>${type.toUpperCase()}</b>&ensp;${text}\n`);
-}
-
-function getRestOfLineFromIndex(input, index) {
-  const truncated = input.substring(index);
-  const endOfLine = /\r\n|\r|\n/.exec(truncated);
-  return truncated.substring(0, endOfLine.index);
 }
 
 module.exports = runescriptHoverProvider;

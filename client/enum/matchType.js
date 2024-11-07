@@ -18,6 +18,7 @@ const matchType = {
   ENUM: {id: 'ENUM', definitionFiles: ["enum"], definitionFormat: '[NAME]'},
   DBROW: {id: 'DBROW', definitionFiles: ["dbrow"], definitionFormat: '[NAME]'},
   DBTABLE: {id: 'DBTABLE', definitionFiles: ["dbtable"], definitionFormat: '[NAME]'},
+  INTERFACE: {id: 'INTERFACE', definitionFiles: ["pack"], definitionFormat: 'NAME'},
   LOCAL_VAR_DECLARATION: {id: 'LOCAL_VAR_DECLARATION'},
   GLOBAL_VAR_DECLARATION: {id: 'GLOBAL_VAR_DECLARATION'},
   CONSTANT_DECLARATION: {id: 'CONSTANT_DECLARATION'},
