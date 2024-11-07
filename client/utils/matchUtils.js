@@ -1,4 +1,3 @@
-const vscode = require('vscode');
 const matchType = require("../enum/MatchType");
 
 const matchWord = (document, position) => {
@@ -9,8 +8,8 @@ const matchWord = (document, position) => {
 
 	const word = document.getText(wordRange);
 	const lineText = document.lineAt(position.line).text;
-	if (lineText.startsWith('//') || isPositionInString(lineText, position) || word.match(/^\d+.?\d+$/)) {
-		return returnDefault(); // Ignore comments and strings and numbers
+	if (lineText.startsWith('//') || word.match(/^\d+.?\d+$/)) {
+		return returnDefault(); // Ignore comments and numbers
 	}
 	
 	const prevWord = getPrevWord(document, wordRange.start);
@@ -94,6 +93,9 @@ function getOpenBracketMatchType(fileType) {
 		case "dbrow": return matchType.DBROW_DECLARATION;
 		case "dbtable": return matchType.DBTABLE_DECLARATION;
 		case "enum": return matchType.ENUM_DECLARATION;
+		case "hunt": return matchType.HUNT_DECLARATION;
+		case "inv": return matchType.INV_DECLARATION;
+		case "spotanim": return matchType.SPOTANIM_DECLARATION;
 	}
 	return matchType.UNKNOWN;
 }

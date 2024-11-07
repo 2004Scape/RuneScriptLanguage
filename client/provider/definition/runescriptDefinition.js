@@ -11,18 +11,18 @@ const runescriptDefinitionProvider = {
         }
 
         switch (match.id) {
-            case matchType.LOCAL_VAR.id: return gotoLocalVar(document, word);
+            case matchType.LOCAL_VAR.id: return gotoLocalVar(document, position, word);
             default: return await gotoDefinition(match, word);
         }
     }
 }
 
-const gotoLocalVar = (document, word) => {
-    // TODO: limit search to the block, not the entire document (if local var is defined in multiple blocks it can go to wrong def)
+const gotoLocalVar = (document, position, word) => {
     const varKeyword = "(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|queue|weakqueue|timer|softtimer|char|dbcolumn|proc|label)\\b";
-    const match = document.getText().match(new RegExp(`${varKeyword} \\$${word}`));
-    const matchPosition = document.positionAt(match.index);
-    return !match ? null : new vscode.Location(document.uri, matchPosition.translate(0, match[1].length + 1));
+    const fileText = document.getText(new vscode.Range(new vscode.Position(0, 0), position));
+    const matches = [...fileText.matchAll(new RegExp(`${varKeyword} \\$${word}`, "g"))];
+    const match = matches[matches.length - 1];
+    return !match ? null : new vscode.Location(document.uri, document.positionAt(match.index).translate(0, match[1].length + 1));
 }
 
 const gotoDefinition = async (match, word) => {
