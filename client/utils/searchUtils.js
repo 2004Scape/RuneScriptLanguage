@@ -2,6 +2,12 @@ const vscode = require('vscode');
 const fs = require('fs');
 const stringUtils = require('./stringUtils');
 
+const textResult = {
+  full: "full",
+  remaining: "remaining",
+  line: "line"
+}
+
 const searchFile = async function(pattern, fileName, lineIndexOffset) {
   const files = await vscode.workspace.findFiles(`**/${fileName}`);
   const fileText = fs.readFileSync(files[0].path, "utf8");
@@ -12,7 +18,7 @@ const searchFile = async function(pattern, fileName, lineIndexOffset) {
   return new vscode.Location(files[0], getPosition(fileText, idx, lineIndexOffset));
 }
 
-const searchFiles = async function(pattern, fileTypes, lineIndexOffset, limit) {
+const searchFiles = async function(pattern, fileTypes, lineIndexOffset, limit, responseText) {
   // Might want to switch to findTextInFiles when released https://github.com/microsoft/vscode/issues/59921#issuecomment-2231630101
   limit = limit || 20;
   lineIndexOffset = lineIndexOffset || 0;
@@ -27,7 +33,7 @@ const searchFiles = async function(pattern, fileTypes, lineIndexOffset, limit) {
     const idx = fileText.indexOf(pattern);
     if (idx >= 0) {
       results.push({
-        "lineText": stringUtils.getLineText(fileText.substring(idx)),
+        "text": getReturnText(responseText, fileText, idx),
         "location": new vscode.Location(fileUri, getPosition(fileText, idx, lineIndexOffset))
       });
       return results.length === limit; // short circuit when result limit is reached
@@ -42,6 +48,15 @@ const searchLocalVar = (fileText, word) => {
   return matches[matches.length - 1];
 }
 
+function getReturnText(responseText, fileText, idx) {
+  if (responseText === textResult.full) {
+    return fileText;
+  } else if (responseText === textResult.remaining) {
+    return fileText.substring(idx);
+  } 
+  return stringUtils.getLineText(fileText.substring(idx)); // default = return line
+}
+
 function getPosition(fileText, index, lineIndexOffset) {
   const split = fileText.slice(0, index).split(/\r\n|\r|\n/g);
   const lineNum = split ? split.length - 1 : 0;
@@ -49,4 +64,4 @@ function getPosition(fileText, index, lineIndexOffset) {
   return new vscode.Position(lineNum, lineIndex);
 }
 
-module.exports = { searchFile, searchFiles, searchLocalVar }
+module.exports = { textResult, searchFile, searchFiles, searchLocalVar }

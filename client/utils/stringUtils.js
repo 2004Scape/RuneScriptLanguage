@@ -1,6 +1,12 @@
+const eolRegex = /\r\n|\r|\n/;
+
 const getLineText = function(input) {
-  const endOfLine = /\r\n|\r|\n/.exec(input);
-  return input.substring(0, endOfLine.index);
+  const endOfLine = eolRegex.exec(input);
+  return !endOfLine ? input : input.substring(0, endOfLine.index);
 }
 
-module.exports = { getLineText };
+const getLines = function(input) {
+  return input.split(eolRegex);
+}
+
+module.exports = { getLineText, getLines };

@@ -154,8 +154,11 @@ function getOpenParenthesisMatchType(prevWord) {
 }
 
 function getEqualsMatchType(prevWord) {
-	switch (prevWord) {
-		case "param": return matchType.PARAM;
+  switch (prevWord) {
+    case "param": return matchType.PARAM;
+    case "table": return matchType.DBTABLE;
+    case "huntmode": return matchType.HUNT;
+    case "anim": return matchType.SEQ;
   }
   return matchType.UNKNOWN;
 }

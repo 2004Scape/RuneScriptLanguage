@@ -1,13 +1,31 @@
 const vscode = require('vscode');
 const varpHoverProvider = require('./provider/hover/varpHover');
-const runescriptHoverProvider = require('./provider/hover/runescriptHover');
+const hoverProvider = require('./provider/hover/hoverProvider');
 const recolProvider = require('./provider/color/recolorProvider');
 const runescriptDefinitionProvider = require('./provider/definition/runescriptDefinition');
 const { gotoDefinitionProvider } = require('./provider/definition/gotoDefinition');
 
 function activate(context) {
-    vscode.languages.registerHoverProvider('varpconfig', varpHoverProvider(context));
-    vscode.languages.registerHoverProvider('runescript', runescriptHoverProvider(context));
+    vscode.languages.registerHoverProvider('runescript', hoverProvider(context));
+    vscode.languages.registerHoverProvider('locconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('objconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('npcconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('dbtableconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('dbrowconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('paramconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('structconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('enumconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('varpconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('varnconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('varsconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('invconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('seqconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('spotanimconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('mesanimconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('idkconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('huntconfig', hoverProvider(context));
+    vscode.languages.registerHoverProvider('constants', hoverProvider(context));
+    vscode.languages.registerHoverProvider('interface', hoverProvider(context));
 
     vscode.languages.registerColorProvider('locconfig', recolProvider);
     vscode.languages.registerColorProvider('npcconfig', recolProvider);
