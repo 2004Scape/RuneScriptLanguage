@@ -7,8 +7,10 @@ const gotoDefinition = require('./gotoDefinition');
 const runescriptDefinitionProvider = {
   async provideDefinition(document, position, token) {
     const { word, match } = matchUtils.matchWord(document, position);
+    if (match.id === matchType.UNKNOWN.id || match.declaration || !word) {
+      return null;
+    }
     switch (match.id) {
-      case matchType.UNKNOWN.id: return null;
       case matchType.LOCAL_VAR.id: return gotoLocalVar(document, position, word);
       default: return gotoDefinition.gotoDefinition(match, word);
     }

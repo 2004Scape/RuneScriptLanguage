@@ -10,7 +10,7 @@ const gotoDefinitionProvider = {
 }
 
 const gotoDefinition = async (match, word) => {
-  if (!match || !match.definitionFiles || !match.definitionFormat || !word) {
+  if (!match || match.declaration || !word) {
     return null;
   }
   switch (match.id) {

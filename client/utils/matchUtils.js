@@ -21,9 +21,9 @@ const matchWord = (document, position) => {
     case '[': match = getOpenBracketMatchType(fileType); break;
     case ',': match = getCommaMatchType(prevWord); break;
     case '^': match = getConstantMatchType(fileType); break;
-    case '%': match = matchType.GLOBAL_VAR; break;
-    case '@': match = matchType.LABEL; break;
-    case '~': match = matchType.PROC; break;
+    case '%': match = reference(matchType.GLOBAL_VAR); break;
+    case '@': match = reference(matchType.LABEL); break;
+    case '~': match = reference(matchType.PROC); break;
     case '$': match = getLocalVarMatchType(prevWord); break;
     case '(': match = getOpenParenthesisMatchType(prevWord); break;
     case '=': match = getEqualsMatchType(prevWord); break;
@@ -72,49 +72,49 @@ function getPrevWord(document, position) {
 
 function getLocalVarMatchType(prevWord) {
   if (!prevWord) {
-    return matchType.LOCAL_VAR;
+    return reference(matchType.LOCAL_VAR);
   }
   if (prevWord.startsWith("def_")) {
     prevWord = prevWord.substr(4);
   }
   const defKeyword = "\\b(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|queue|weakqueue|timer|softtimer|char|dbcolumn|proc|label)\\b";
   const match = prevWord.match(new RegExp(defKeyword));
-  return !match ? matchType.LOCAL_VAR : matchType.LOCAL_VAR_DECLARATION;
+  return !match ? reference(matchType.LOCAL_VAR) : declaration(matchType.LOCAL_VAR);
 }
 
 function getOpenBracketMatchType(fileType) {
   switch (fileType) {
-    case "varp": case "varn": case "vars": return matchType.GLOBAL_VAR_DECLARATION;
-    case "obj": return matchType.OBJ_DECLARATION;
-    case "loc": return matchType.LOC_DECLARATION;
-    case "npc": return matchType.NPC_DECLARATION;
-    case "param": return matchType.PARAM_DECLARATION;
-    case "seq": return matchType.SEQ_DECLARATION;
-    case "struct": return matchType.STRUCT_DECLARATION;
-    case "dbrow": return matchType.DBROW_DECLARATION;
-    case "dbtable": return matchType.DBTABLE_DECLARATION;
-    case "enum": return matchType.ENUM_DECLARATION;
-    case "hunt": return matchType.HUNT_DECLARATION;
-    case "inv": return matchType.INV_DECLARATION;
-    case "spotanim": return matchType.SPOTANIM_DECLARATION;
+    case "varp": case "varn": case "vars": return declaration(matchType.GLOBAL_VAR);
+    case "obj": return declaration(matchType.OBJ);
+    case "loc": return declaration(matchType.LOC);
+    case "npc": return declaration(matchType.NPC);
+    case "param": return declaration(matchType.PARAM);
+    case "seq": return declaration(matchType.SEQ);
+    case "struct": return declaration(matchType.STRUCT);
+    case "dbrow": return declaration(matchType.DBROW);
+    case "dbtable": return declaration(matchType.DBTABLE);
+    case "enum": return declaration(matchType.ENUM);
+    case "hunt": return declaration(matchType.HUNT);
+    case "inv": return declaration(matchType.INV);
+    case "spotanim": return declaration(matchType.SPOTANIM);
   }
   return matchType.UNKNOWN;
 }
 
 function getCommaMatchType(prevWord) {
   switch (prevWord) {
-    case "proc": return matchType.PROC_DECLARATION;
-    case "label": return matchType.LABEL_DECLARATION;
-    case "queue": return matchType.QUEUE_DECLARATION;
-    case "timer": return matchType.TIMER_DECLARATION;
-    case "softtimer": return matchType.SOFTTIMER_DECLARATION;
-    case "opplayeru": case "applayeru": return matchType.OBJ;
-    case "opnpct": case "opplayert": case "apnpct": case "applayert": return matchType.INTERFACE;
+    case "proc": return declaration(matchType.PROC);
+    case "label": return declaration(matchType.LABEL);
+    case "queue": return declaration(matchType.QUEUE);
+    case "timer": return declaration(matchType.TIMER);
+    case "softtimer": return declaration(matchType.SOFTTIMER);
+    case "opplayeru": case "applayeru": return reference(matchType.OBJ);
+    case "opnpct": case "opplayert": case "apnpct": case "applayert": return reference(matchType.INTERFACE);
   }
   switch (prevWord.substring(0, Math.min(5, prevWord.length))) {
-    case "oploc": case "aploc": return matchType.LOC;
-    case "ophel": case "opobj": return matchType.OBJ;
-    case "opnpc": case "ai_qu": case "ai_ap": case "ai_ti": return matchType.NPC;
+    case "oploc": case "aploc": return reference(matchType.LOC);
+    case "ophel": case "opobj": return reference(matchType.OBJ);
+    case "opnpc": case "ai_qu": case "ai_ap": case "ai_ti": return reference(matchType.NPC);
   }
   return matchType.UNKNOWN;
 }
@@ -122,52 +122,60 @@ function getCommaMatchType(prevWord) {
 function getOpenParenthesisMatchType(prevWord) {
 	switch (prevWord) {
 		case "queue": case "getqueue": case "clearqueue": case "weakqueue": case "strongqueue":
-			return matchType.QUEUE;
+			return reference(matchType.QUEUE);
 		case "settimer": case "cleartimer": case "gettimer":
-			return matchType.TIMER;
+			return reference(matchType.TIMER);
 		case "softtimer": case "clearsofttimer": 
-			return matchType.SOFTTIMER;
+			return reference(matchType.SOFTTIMER);
 		case "npc_sethuntmode": 
-			return matchType.HUNT;
+			return reference(matchType.HUNT);
 		case "enum_getoutputcount":
-			return matchType.ENUM;
+			return reference(matchType.ENUM);
 		case "gosub":
-			return matchType.PROC;
+			return reference(matchType.PROC);
 		case "jump":
-			return matchType.LABEL;
+			return reference(matchType.LABEL);
 		case "anim": case "loc_anim": case "npc_anim": case "bas_readyanim": case "bas_running": case "bas_turnonspot": case "bas_walk_f": case "bas_walk_b": case "bas_walk_l": case "bas_walk_r": case "seqlength": 
-			return matchType.SEQ;
+			return reference(matchType.SEQ);
 		case "spotanim_npc": case "spotanim_map": case "spotanim_pl": 
-			return matchType.SPOTANIM;
+			return reference(matchType.SPOTANIM);
 		case "loc_change": case "loc_type": case "lc_name": case "lc_param": case "lc_width": case "lc_length": case "lc_debugname": case "lc_desc": case "lc_debugname": 
-			return matchType.LOC;
+			return reference(matchType.LOC);
 		case "npc_changetype": case "nc_name": case "nc_param": case "nc_category": case "nc_desc": case "nc_debugname": case "nc_op": 
-			return matchType.NPC;
+			return reference(matchType.NPC);
 		case "oc_name": case "oc_param": case "oc_category": case "oc_desc": case "oc_members": case "oc_weight": case "oc_wearpos": case "oc_wearpos2": case "oc_wearpos3": case "oc_cost": case "oc_tradeable": case "oc_debugname": case "oc_cert": case "oc_uncert": case "oc_stackable":
-			return matchType.OBJ;
+			return reference(matchType.OBJ);
 		case "db_getfieldcount": case "db_getrowtable":
-			return matchType.DBROW;
+			return reference(matchType.DBROW);
 		case "db_find": case "db_listall": case "db_listall_with_count":
-			return matchType.DBTABLE;
+			return reference(matchType.DBTABLE);
 	}
 	return matchType.UNKNOWN;
 }
 
 function getEqualsMatchType(prevWord) {
   switch (prevWord) {
-    case "param": return matchType.PARAM;
-    case "table": return matchType.DBTABLE;
-    case "huntmode": return matchType.HUNT;
-    case "anim": return matchType.SEQ;
+    case "param": return reference(matchType.PARAM);
+    case "table": return reference(matchType.DBTABLE);
+    case "huntmode": return reference(matchType.HUNT);
+    case "anim": case "readyanim": case "walkanim": return reference(matchType.SEQ);
   }
   return matchType.UNKNOWN;
 }
 
 function getConstantMatchType(fileType) {
 	if (fileType === "constant") {
-		return matchType.CONSTANT_DECLARATION;
+		return declaration(matchType.CONSTANT);
 	}
-	return matchType.CONSTANT;
+	return reference(matchType.CONSTANT);
+}
+
+function reference(type) {
+  return { ...type, declaration: false };
+}
+
+function declaration(type) {
+  return { ...type, declaration: true };
 }
 
 module.exports = { matchWord };
