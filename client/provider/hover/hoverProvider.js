@@ -47,20 +47,19 @@ const hoverProvider = function(context) {
 }
 
 function buildLocalVarHoverText(document, position, word, match, content) {
-  let displayText = '';
+  appendMarkdown(content, "LOCAL_VAR", word, "rs2");
   if (match.declaration === false) {
     const fileText = document.getText(new vscode.Range(new vscode.Position(0, 0), position));
     const match = searchUtils.searchLocalVar(fileText, word);
     const isDef = fileText.substring(Math.max(match.index - 4, 0), match.index) === "def_";
     if (isDef) {
       const line = stringUtils.getLineText(fileText.substring(match.index - 4));;
-      displayText = line.substring(0, line.indexOf(";"));
+      appendMarkdownBody(content, line.substring(0, line.indexOf(";")), true);
     } else {
       const lineText = stringUtils.getLineText(fileText.substring(match.index));
-      displayText = `input parameter (${lineText.substring(0, lineText.indexOf(word) + word.length)})`;
+      appendMarkdownBody(content, `input parameter (${lineText.substring(0, lineText.indexOf(word) + word.length)})`, true);
     }
   }
-  appendMarkdown(content, "LOCAL_VAR", displayText, "rs2");
 }
 
 async function buildConstantHoverText(word, match, content) {
