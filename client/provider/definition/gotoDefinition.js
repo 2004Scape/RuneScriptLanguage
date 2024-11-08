@@ -16,6 +16,7 @@ const gotoDefinition = async (match, word) => {
   switch (match.id) {
     case matchType.INTERFACE.id: return gotoSpecific(match, word, "interface.pack");
     case matchType.COMMAND.id: return gotoSpecific(match, word, "engine.rs2");
+    case matchType.SYNTH.id: return gotoSpecific(match, word, "sound.pack");
     default: return gotoDefault(match, word);
   }
 }

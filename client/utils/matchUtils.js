@@ -149,6 +149,8 @@ function getOpenParenthesisMatchType(prevWord) {
 			return reference(matchType.DBROW);
 		case "db_find": case "db_listall": case "db_listall_with_count":
 			return reference(matchType.DBTABLE);
+    case "sound_synth":
+      return reference(matchType.SYNTH);
 	}
 	return matchType.UNKNOWN;
 }

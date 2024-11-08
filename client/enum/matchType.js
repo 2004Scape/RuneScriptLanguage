@@ -20,7 +20,8 @@ const matchType = {
   DBTABLE: {id: 'DBTABLE', definitionFiles: ["dbtable"], definitionFormat: '[NAME]', previewDeclaration: true},
   INTERFACE: {id: 'INTERFACE', definitionFiles: ["pack"], definitionFormat: 'NAME'},
   PARAM: {id: 'PARAM', definitionFiles: ["param"], definitionFormat: '[NAME]', previewDeclaration: true},
-  COMMAND: {id: 'COMMAND', definitionFiles: ["rs2"], definitionFormat: '[command,NAME]'}
+  COMMAND: {id: 'COMMAND', definitionFiles: ["rs2"], definitionFormat: '[command,NAME]'},
+  SYNTH: {id: 'SOUND_SYNTH', definitionFiles: ["synth"], definitionFormat: 'NAME'},
 };
 
 module.exports = matchType;
