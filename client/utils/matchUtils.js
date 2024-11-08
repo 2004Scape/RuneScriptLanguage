@@ -26,9 +26,10 @@ const matchWord = (document, position) => {
     case '~': match = matchType.PROC; break;
     case '$': match = getLocalVarMatchType(prevWord); break;
     case '(': match = getOpenParenthesisMatchType(prevWord); break;
+    case '=': match = getEqualsMatchType(prevWord); break;
   }
 
-  if (match === matchType.UNKNOWN) {
+  if (match.id === matchType.UNKNOWN.id) {
     return returnDefault();
   }
 
@@ -54,10 +55,7 @@ function isPositionInString(lineText, position) {
 }
 
 function returnDefault() {
-  return {
-    "word": null,
-    "match": matchType.UNKNOWN
-  }
+  return { "match": matchType.UNKNOWN }
 }
 
 function getPrevWord(document, position) {
@@ -153,6 +151,13 @@ function getOpenParenthesisMatchType(prevWord) {
 			return matchType.DBTABLE;
 	}
 	return matchType.UNKNOWN;
+}
+
+function getEqualsMatchType(prevWord) {
+	switch (prevWord) {
+		case "param": return matchType.PARAM;
+  }
+  return matchType.UNKNOWN;
 }
 
 function getConstantMatchType(fileType) {

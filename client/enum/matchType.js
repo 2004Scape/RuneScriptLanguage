@@ -19,6 +19,8 @@ const matchType = {
   DBROW: {id: 'DBROW', definitionFiles: ["dbrow"], definitionFormat: '[NAME]'},
   DBTABLE: {id: 'DBTABLE', definitionFiles: ["dbtable"], definitionFormat: '[NAME]'},
   INTERFACE: {id: 'INTERFACE', definitionFiles: ["pack"], definitionFormat: 'NAME'},
+  PARAM: {id: 'PARAM', definitionFiles: ["param"], definitionFormat: '[NAME]'},
+  COMMAND: {id: 'COMMAND', definitionFiles: ["rs2"], definitionFormat: '[command,NAME]'},
   LOCAL_VAR_DECLARATION: {id: 'LOCAL_VAR_DECLARATION'},
   GLOBAL_VAR_DECLARATION: {id: 'GLOBAL_VAR_DECLARATION'},
   CONSTANT_DECLARATION: {id: 'CONSTANT_DECLARATION'},
