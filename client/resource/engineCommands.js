@@ -1,23 +1,27 @@
-const vscode = require('vscode');
-const fs = require('fs');
+const https = require("https");
 const stringUtils = require('../utils/stringUtils');
 const matchType = require('../enum/MatchType');
 
 const commands = {};
 const lineType = { NOOP: 0, TYPE: 1, COMMAND: 2 };
 
-async function updateCommands() {
-  // Parse the engine.rs2 file to build the commands reference object
-  const files = await vscode.workspace.findFiles(`**/engine.rs2`);
-  const lines = stringUtils.getLines(fs.readFileSync(files[0].path, "utf8"));
-
-  let type;
-  for (const line of lines) {
-    switch (getLineType(line)) {
-      case lineType.TYPE: type = parseType(line); break;
-      case lineType.COMMAND: parseCommand(line, type); break;
-    }
-  }
+function updateCommands() {
+  // Download and parse the engine.rs2 file from the Server repo, and build the commands reference object
+  const remoteEngineFileUrl = "https://raw.githubusercontent.com/2004Scape/Server/refs/heads/main/data/src/scripts/engine.rs2";
+  https.get(remoteEngineFileUrl).on('response', function (response) {
+    var fileText = '';
+    response.on('data', chunk => fileText += chunk);
+    response.on('end', () => {
+      let type;
+      const lines = stringUtils.getLines(fileText);
+      for (const line of lines) {
+        switch (getLineType(line)) {
+          case lineType.TYPE: type = parseType(line); break;
+          case lineType.COMMAND: parseCommand(line, type); break;
+        }
+      }
+    });
+  });
 }
 
 function getLineType(line) {
