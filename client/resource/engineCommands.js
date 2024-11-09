@@ -37,9 +37,9 @@ function parseCommand(line, type) {
   
   // Parse input params
   const params = [];
-  let openingIndex = line.indexOf('(') + 1;
+  let openingIndex = line.indexOf('(');
   let closingIndex = line.indexOf(')');
-  if (openingIndex >= 1 && closingIndex >= 0 && openingIndex !== closingIndex) {
+  if (openingIndex >= 0 && closingIndex >= 0 && ++openingIndex !== closingIndex) {
     line.substring(openingIndex, closingIndex).split(',').forEach(param => {
       if (param.startsWith(' ')) param = param.substring(1);
       const split = param.split(' ');
@@ -53,9 +53,9 @@ function parseCommand(line, type) {
   // Parse response type
   let returns = '';
   line = line.substring(closingIndex + 1);
-  openingIndex = line.indexOf('(') + 1;
+  openingIndex = line.indexOf('(');
   closingIndex = line.indexOf(')');
-  if (openingIndex >= 1 && closingIndex >= 0 && openingIndex !== closingIndex) {
+  if (openingIndex >= 0 && closingIndex >= 0 && ++openingIndex !== closingIndex) {
     returns = line.substring(openingIndex, closingIndex);
   }
 
