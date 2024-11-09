@@ -1,4 +1,5 @@
 const matchType = require("../enum/MatchType");
+const { commands } = require("../resource/engineCommands");
 
 const matchWord = (document, position) => {
   const wordRange = document.getWordRangeAtPosition(position);
@@ -25,8 +26,11 @@ const matchWord = (document, position) => {
     case '@': match = reference(matchType.LABEL); break;
     case '~': match = reference(matchType.PROC); break;
     case '$': match = getLocalVarMatchType(prevWord); break;
-    case '(': match = getOpenParenthesisMatchType(prevWord); break;
     case '=': match = getEqualsMatchType(prevWord); break;
+  }
+
+  if (match.id === matchType.UNKNOWN.id) {
+    match = parseForEngineCommands(word, lineText, position.character, identifier, document);
   }
 
   if (match.id === matchType.UNKNOWN.id) {
@@ -97,6 +101,7 @@ function getOpenBracketMatchType(fileType) {
     case "hunt": return declaration(matchType.HUNT);
     case "inv": return declaration(matchType.INV);
     case "spotanim": return declaration(matchType.SPOTANIM);
+    case "idk": return declaration(matchType.IDK);
   }
   return matchType.UNKNOWN;
 }
@@ -108,6 +113,7 @@ function getCommaMatchType(prevWord) {
     case "queue": return declaration(matchType.QUEUE);
     case "timer": return declaration(matchType.TIMER);
     case "softtimer": return declaration(matchType.SOFTTIMER);
+    case "walktrigger": return declaration(matchType.WALKTRIGGER);
     case "opplayeru": case "applayeru": return reference(matchType.OBJ);
     case "opnpct": case "opplayert": case "apnpct": case "applayert": return reference(matchType.INTERFACE);
   }
@@ -117,42 +123,6 @@ function getCommaMatchType(prevWord) {
     case "opnpc": case "ai_qu": case "ai_ap": case "ai_ti": return reference(matchType.NPC);
   }
   return matchType.UNKNOWN;
-}
-
-function getOpenParenthesisMatchType(prevWord) {
-	switch (prevWord) {
-		case "queue": case "getqueue": case "clearqueue": case "weakqueue": case "strongqueue":
-			return reference(matchType.QUEUE);
-		case "settimer": case "cleartimer": case "gettimer":
-			return reference(matchType.TIMER);
-		case "softtimer": case "clearsofttimer": 
-			return reference(matchType.SOFTTIMER);
-		case "npc_sethuntmode": 
-			return reference(matchType.HUNT);
-		case "enum_getoutputcount":
-			return reference(matchType.ENUM);
-		case "gosub":
-			return reference(matchType.PROC);
-		case "jump":
-			return reference(matchType.LABEL);
-		case "anim": case "loc_anim": case "npc_anim": case "bas_readyanim": case "bas_running": case "bas_turnonspot": case "bas_walk_f": case "bas_walk_b": case "bas_walk_l": case "bas_walk_r": case "seqlength": 
-			return reference(matchType.SEQ);
-		case "spotanim_npc": case "spotanim_map": case "spotanim_pl": 
-			return reference(matchType.SPOTANIM);
-		case "loc_change": case "loc_type": case "lc_name": case "lc_param": case "lc_width": case "lc_length": case "lc_debugname": case "lc_desc": case "lc_debugname": 
-			return reference(matchType.LOC);
-		case "npc_changetype": case "nc_name": case "nc_param": case "nc_category": case "nc_desc": case "nc_debugname": case "nc_op": 
-			return reference(matchType.NPC);
-		case "oc_name": case "oc_param": case "oc_category": case "oc_desc": case "oc_members": case "oc_weight": case "oc_wearpos": case "oc_wearpos2": case "oc_wearpos3": case "oc_cost": case "oc_tradeable": case "oc_debugname": case "oc_cert": case "oc_uncert": case "oc_stackable":
-			return reference(matchType.OBJ);
-		case "db_getfieldcount": case "db_getrowtable":
-			return reference(matchType.DBROW);
-		case "db_find": case "db_listall": case "db_listall_with_count":
-			return reference(matchType.DBTABLE);
-    case "sound_synth":
-      return reference(matchType.SYNTH);
-	}
-	return matchType.UNKNOWN;
 }
 
 function getEqualsMatchType(prevWord) {
@@ -170,6 +140,29 @@ function getConstantMatchType(fileType) {
 		return declaration(matchType.CONSTANT);
 	}
 	return reference(matchType.CONSTANT);
+}
+
+function parseForEngineCommands(word, line, index, identifier, document) {
+  if (identifier === '[') return matchType.UNKNOWN;
+
+  // Identify command name: check if word is in the commands object
+  if (word in commands) {
+    return (document.uri.path.includes("engine.rs2")) ? declaration(matchType.COMMAND) : reference(matchType.COMMAND);
+  }
+
+  // Identify command param: check if encased in brackets & preceeding char is not a closing bracket (block definitions)
+  let closingIndex = line.substring(index).indexOf(')');
+  let openingIndex = line.substring(0, index).lastIndexOf('(');
+  if (openingIndex < 0 || closingIndex < 0 || line.charAt(Math.max(0, openingIndex - 1)) === ']') {
+    return matchType.UNKNOWN;
+  }
+  const commandName = line.substring(line.substring(0, openingIndex).lastIndexOf(' ') + 1, openingIndex);
+  const command = commands[commandName];
+  if (!command) {
+    return matchType.UNKNOWN;
+  }
+  const param = command.params[(line.substring(openingIndex, index).match(/,/g) || []).length];
+  return !param ? matchType.UNKNOWN : param.matchType;
 }
 
 function reference(type) {

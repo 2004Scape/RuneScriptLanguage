@@ -1,9 +1,12 @@
 const vscode = require('vscode');
+const engineCommands = require('./resource/engineCommands');
 const hoverProvider = require('./provider/hover/hoverProvider');
 const recolorProvider = require('./provider/color/recolorProvider');
 const definitionProvider = require('./provider/definition/gotoDefinition');
 
 function activate(context) {
+    engineCommands.updateCommands();
+
     vscode.languages.registerHoverProvider('runescript', hoverProvider(context));
     vscode.languages.registerHoverProvider('locconfig', hoverProvider(context));
     vscode.languages.registerHoverProvider('objconfig', hoverProvider(context));

@@ -4,6 +4,7 @@ const matchUtils = require('../../utils/matchUtils');
 const stringUtils = require('../../utils/stringUtils');
 const searchUtils = require('../../utils/searchUtils');
 const matchType = require('../../enum/MatchType');
+const { commands } = require('../../resource/engineCommands');
 
 const hoverProvider = function(context) {
   return {
@@ -34,6 +35,9 @@ const hoverProvider = function(context) {
           break;
         case matchType.ENUM.id:
           await buildEnumHoverText(word, match, content);
+          break;
+        case matchType.COMMAND.id:
+          buildCommandHoverText(word, match, content);
           break;
         default: 
           await buildDefaultHoverText(word, match, content);
@@ -98,10 +102,10 @@ async function buildBlockHoverText(word, match, lineText, content) {
   if (match.previewDeclaration === true) {
     const split = line.split('(');
     if (split.length > 1 && split[1].length > 1) {
-      appendMarkdownBody(content, `<b>params:</b> <i>${split[1].substring(0, split[1].indexOf(')'))}</i>`, true);
+      appendParamsText(content, split[1].substring(0, split[1].indexOf(')')), true);
     }
     if (split.length > 2 && split[2].length > 1) {
-      appendMarkdownBody(content, `<b>returns:</b> <i>${split[2].substring(0, split[2].indexOf(')'))}</i>`, split[1].length === 1);
+      appendReturnsText(content, split[2].substring(0, split[2].indexOf(')')), split[1].length === 1);
     }
   }
 }
@@ -115,6 +119,20 @@ async function buildEnumHoverText(word, match, content) {
       results[0].text = results[0].text.replace("inputtype=", "Input type: ");
       results[0].text = results[0].text.replace("outputtype=", "Output type: ");
       appendBodyUntilEmptyLine(content, results[0].text, true, 1, "val");
+    }
+  }
+}
+
+function buildCommandHoverText(word, match, content) {
+  if (match.declaration) return;
+  appendMarkdown(content, match.id, word, "rs2");
+  const command = commands[word];
+  if (command) {
+    if (command.paramsText.length > 0) {
+      appendParamsText(content, command.paramsText, true);
+    }
+    if (command.returns.length > 0) {
+      appendReturnsText(content, command.returns, command.paramsText === '');
     }
   }
 }
@@ -137,6 +155,14 @@ function appendMarkdown(content, type, text, icon) {
 
 function appendLineBreak(content) {
   content.appendMarkdown('\n\n---');
+}
+
+function appendParamsText(content, text, addLineBreak) {
+  appendMarkdownBody(content, `<b>params:</b> <i>${text}</i>`, addLineBreak);
+}
+
+function appendReturnsText(content, text, addLineBreak) {
+  appendMarkdownBody(content, `<b>returns:</b> <i>${text}</i>`, addLineBreak);
 }
 
 function appendMarkdownBody(content, body, addLineBreak) {
