@@ -14,7 +14,7 @@ async function updateCommands() {
   let type;
   for (const line of lines) {
     switch (getLineType(line)) {
-      case lineType.TYPE: type = line.substring(3, line.indexOf("ops") - 1); break;
+      case lineType.TYPE: type = parseType(line); break;
       case lineType.COMMAND: parseCommand(line, type); break;
     }
   }
@@ -24,6 +24,10 @@ function getLineType(line) {
   if (/\/\/.+ops \(\d+-\d+\)/.test(line)) return lineType.TYPE;
   if (line.startsWith("[command,")) return lineType.COMMAND
   return lineType.NOOP;
+}
+
+function parseType(line) {
+  return `${line.substring(3, line.indexOf("ops") - 1).split(" ").map(word => word.toLowerCase()).join(" ")} command`;
 }
 
 function parseCommand(line, type) {

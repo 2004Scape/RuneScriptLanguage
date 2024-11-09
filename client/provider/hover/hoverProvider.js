@@ -124,16 +124,16 @@ async function buildEnumHoverText(word, match, content) {
 }
 
 function buildCommandHoverText(word, match, content) {
-  if (match.declaration) return;
-  appendMarkdown(content, match.id, word, "rs2");
   const command = commands[word];
-  if (command) {
-    if (command.paramsText.length > 0) {
-      appendParamsText(content, command.paramsText, true);
-    }
-    if (command.returns.length > 0) {
-      appendReturnsText(content, command.returns, command.paramsText === '');
-    }
+  if (match.declaration || !command) {
+    return;
+  }
+  appendMarkdown(content, match.id, `${word} (${command.type})`, "rs2");
+  if (command.paramsText.length > 0) {
+    appendParamsText(content, command.paramsText, true);
+  }
+  if (command.returns.length > 0) {
+    appendReturnsText(content, command.returns, command.paramsText === '');
   }
 }
 
