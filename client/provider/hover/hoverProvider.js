@@ -102,10 +102,10 @@ async function buildBlockHoverText(word, match, lineText, content) {
   if (match.previewDeclaration === true) {
     const split = line.split('(');
     if (split.length > 1 && split[1].length > 1) {
-      appendParamsText(content, split[1].substring(0, split[1].indexOf(')')), true);
+      appendBodyWithLabel(content, "params", split[1].substring(0, split[1].indexOf(')')), true);
     }
     if (split.length > 2 && split[2].length > 1) {
-      appendReturnsText(content, split[2].substring(0, split[2].indexOf(')')), split[1].length === 1);
+      appendBodyWithLabel(content, "returns", split[2].substring(0, split[2].indexOf(')')), split[1].length === 1);
     }
   }
 }
@@ -130,13 +130,13 @@ function buildCommandHoverText(word, match, content) {
   }
   appendMarkdown(content, match.id, `${word} (${command.type})`, "rs2");
   if (command.description.length > 0) {
-    appendMarkdownBody(content, `<b>desc:</b> <i>${command.description}</i>`, true);
+    appendBodyWithLabel(content, "desc", command.description, true);
   }
   if (command.paramsText.length > 0) {
-    appendParamsText(content, command.paramsText, command.description === '');
+    appendBodyWithLabel(content, "params", command.paramsText, command.description === '');
   }
   if (command.returns.length > 0) {
-    appendReturnsText(content, command.returns, command.paramsText === '');
+    appendBodyWithLabel(content, "returns", command.returns, command.paramsText === '');
   }
 }
 
@@ -160,12 +160,8 @@ function appendLineBreak(content) {
   content.appendMarkdown('\n\n---');
 }
 
-function appendParamsText(content, text, addLineBreak) {
-  appendMarkdownBody(content, `<b>params:</b> <i>${text}</i>`, addLineBreak);
-}
-
-function appendReturnsText(content, text, addLineBreak) {
-  appendMarkdownBody(content, `<b>returns:</b> <i>${text}</i>`, addLineBreak);
+function appendBodyWithLabel(content, label, text, addLineBreak) {
+  appendMarkdownBody(content, `<b>${label}:</b> <i>${text}</i>`, addLineBreak);
 }
 
 function appendMarkdownBody(content, body, addLineBreak) {
