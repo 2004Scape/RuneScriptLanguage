@@ -2,22 +2,34 @@ const https = require("https");
 const stringUtils = require('../utils/stringUtils');
 const matchType = require('../enum/MatchType');
 
+const remoteEngineFileUrl = "https://raw.githubusercontent.com/2004Scape/Server/refs/heads/main/data/src/scripts/engine.rs2";
+
 const commands = {};
-const lineType = { NOOP: 0, TYPE: 1, COMMAND: 2 };
+const lineType = { NOOP: 0, TYPE: 1, COMMAND: 2, DESCRIPTION: 3 };
+const commandPrefix = "[command,";
+const descriptionPrefix = "// ";
 
 function updateCommands() {
   // Download and parse the engine.rs2 file from the Server repo, and build the commands reference object
-  const remoteEngineFileUrl = "https://raw.githubusercontent.com/2004Scape/Server/refs/heads/main/data/src/scripts/engine.rs2";
   https.get(remoteEngineFileUrl).on('response', function (response) {
     var fileText = '';
     response.on('data', chunk => fileText += chunk);
     response.on('end', () => {
       let type;
+      let description = '';
       const lines = stringUtils.getLines(fileText);
       for (const line of lines) {
         switch (getLineType(line)) {
-          case lineType.TYPE: type = parseType(line); break;
-          case lineType.COMMAND: parseCommand(line, type); break;
+          case lineType.TYPE: 
+            type = parseType(line); 
+            break;
+          case lineType.COMMAND: 
+            parseCommand(line, type, description); 
+            description = '';
+            break;
+          case lineType.DESCRIPTION: 
+            description = line.substring(descriptionPrefix.length); 
+            break;
         }
       }
     });
@@ -26,7 +38,8 @@ function updateCommands() {
 
 function getLineType(line) {
   if (/\/\/.+ops \(\d+-\d+\)/.test(line)) return lineType.TYPE;
-  if (line.startsWith("[command,")) return lineType.COMMAND
+  if (line.startsWith(commandPrefix)) return lineType.COMMAND;
+  if (line.startsWith(descriptionPrefix)) return lineType.DESCRIPTION;
   return lineType.NOOP;
 }
 
@@ -34,9 +47,9 @@ function parseType(line) {
   return `${line.substring(3, line.indexOf("ops") - 1).split(" ").map(word => word.toLowerCase()).join(" ")} command`;
 }
 
-function parseCommand(line, type) {
+function parseCommand(line, type, description) {
   // Parse command name
-  const command = line.substring(9, line.indexOf(']'));
+  const command = line.substring(commandPrefix.length, line.indexOf(']'));
   if (command.startsWith('.')) return; // ignore these commands since params are always the same
   
   // Parse input params
@@ -68,7 +81,8 @@ function parseCommand(line, type) {
     type: type,
     params: params,
     paramsText: params.map(param => `${param.type} ${param.name}`).join(', '),
-    returns: returns
+    returns: returns,
+    description: description
   };
 }
 
