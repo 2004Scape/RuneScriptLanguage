@@ -102,6 +102,7 @@ function getOpenBracketMatchType(fileType) {
     case "inv": return declaration(matchType.INV);
     case "spotanim": return declaration(matchType.SPOTANIM);
     case "idk": return declaration(matchType.IDK);
+    case "mesanim": return declaration(matchType.MESANIM);
   }
   return matchType.UNKNOWN;
 }
@@ -116,6 +117,7 @@ function getCommaMatchType(prevWord) {
     case "walktrigger": return declaration(matchType.WALKTRIGGER);
     case "opplayeru": case "applayeru": return reference(matchType.OBJ);
     case "opnpct": case "opplayert": case "apnpct": case "applayert": return reference(matchType.INTERFACE);
+    case "p": return reference(matchType.MESANIM);
   }
   switch (prevWord.substring(0, Math.min(5, prevWord.length))) {
     case "oploc": case "aploc": return reference(matchType.LOC);

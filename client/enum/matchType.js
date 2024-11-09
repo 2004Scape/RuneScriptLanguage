@@ -24,6 +24,7 @@ const matchType = {
   SYNTH: {id: 'SOUND_SYNTH', types: ["synth"], definitionFiles: ["synth"], definitionFormat: 'NAME'},
   WALKTRIGGER: {id: 'WALKTRIGGER', types: ["walktrigger"], definitionFiles: ["rs2"], definitionFormat: '[walktrigger,NAME]'},
   IDK: {id: 'IDK', types: ["idk", "idkit"], definitionFiles: ["idk"], definitionFormat: '[NAME]'},
+  MESANIM: {id: 'MESANIM', types: ["mesanim"], definitionFiles: ["mesanim"], definitionFormat: '[NAME]'},
 };
 
 module.exports = matchType;
