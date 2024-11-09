@@ -129,8 +129,11 @@ function buildCommandHoverText(word, match, content) {
     return;
   }
   appendMarkdown(content, match.id, `${word} (${command.type})`, "rs2");
+  if (command.description.length > 0) {
+    appendMarkdownBody(content, `<b>desc:</b> <i>${command.description}</i>`, true);
+  }
   if (command.paramsText.length > 0) {
-    appendParamsText(content, command.paramsText, true);
+    appendParamsText(content, command.paramsText, command.description === '');
   }
   if (command.returns.length > 0) {
     appendReturnsText(content, command.returns, command.paramsText === '');
