@@ -10,6 +10,8 @@ const commandPrefix = "[command,";
 const descriptionPrefix = "// ";
 
 function updateCommands() {
+  Object.keys(commands).forEach(key => delete commands[key]);
+
   // Download and parse the engine.rs2 file from the Server repo, and build the commands reference object
   https.get(remoteEngineFileUrl).on('response', function (response) {
     var fileText = '';
