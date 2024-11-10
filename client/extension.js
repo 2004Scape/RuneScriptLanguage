@@ -4,8 +4,14 @@ const hoverProvider = require('./provider/hover/hoverProvider');
 const recolorProvider = require('./provider/color/recolorProvider');
 const definitionProvider = require('./provider/definition/gotoDefinition');
 
-function activate(context) {
+// Refresh engine commands once every 24 horus
+const updateEngineCommands = () => {
     engineCommands.updateCommands();
+    setTimeout(updateEngineCommands, 86_400_000);
+}
+
+function activate(context) {
+    updateEngineCommands();
 
     vscode.languages.registerHoverProvider('runescript', hoverProvider(context));
     vscode.languages.registerHoverProvider('locconfig', hoverProvider(context));
