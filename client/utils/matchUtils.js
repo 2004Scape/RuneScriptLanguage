@@ -1,4 +1,5 @@
 const matchType = require("../enum/MatchType");
+const stringUtils = require("../utils/stringUtils");
 const { commands } = require("../resource/engineCommands");
 
 const matchWord = (document, position) => {
@@ -9,14 +10,15 @@ const matchWord = (document, position) => {
 
   const word = document.getText(wordRange);
   const lineText = document.lineAt(position.line).text;
-  if (lineText.startsWith('//') || word.match(/^\d+.?\d+$/)) {
-    return returnDefault(); // Ignore comments and numbers
+  if (lineText.startsWith('//') || word.match(/^\d+.?\d+$/) || word === 'null') {
+    return returnDefault(); // Ignore comments and numbers and null
   }
 
   const prevWord = getPrevWord(document, wordRange.start);
   const fileType = document.uri.path.split(/[#?]/)[0].split('.').pop().trim();
   const identifier = wordRange.start.character > 0 ? lineText.charAt(wordRange.start.character - 1) : '';
 
+  // try to find a match based on the character proceeding the word
   let match = matchType.UNKNOWN;
     switch (identifier) {
     case '[': match = getOpenBracketMatchType(fileType); break;
@@ -29,10 +31,17 @@ const matchWord = (document, position) => {
     case '=': match = getEqualsMatchType(prevWord); break;
   }
 
+  // try to find a match in the list of command names
   if (match.id === matchType.UNKNOWN.id) {
-    match = parseForEngineCommands(word, lineText, position.character, identifier, document);
+    match = matchEngineCommand(word, identifier, document);
   }
 
+  // try to match parameters (possiblities: command, label, proc, or queue parameters)
+  if (match.id === matchType.UNKNOWN.id) {
+    match = matchParameter(word, lineText, position.character);
+  }
+
+  // return default if no matches found
   if (match.id === matchType.UNKNOWN.id) {
     return returnDefault();
   }
@@ -45,17 +54,6 @@ const matchWord = (document, position) => {
     "lineText": lineText,
     "match": match
   }
-}
-
-function isPositionInString(lineText, position) {
-  const lineTillCurrentPosition = lineText.substr(0, position.character);
-
-  // Count the number of double quotes in the line till current position. Ignore escaped double quotes
-  let doubleQuotesCnt = (lineTillCurrentPosition.match(/\"/g) || []).length;
-  const escapedDoubleQuotesCnt = (lineTillCurrentPosition.match(/\\\"/g) || []).length;
-
-  doubleQuotesCnt -= escapedDoubleQuotesCnt;
-  return doubleQuotesCnt % 2 === 1;
 }
 
 function returnDefault() {
@@ -144,27 +142,50 @@ function getConstantMatchType(fileType) {
 	return reference(matchType.CONSTANT);
 }
 
-function parseForEngineCommands(word, line, index, identifier, document) {
-  if (identifier === '[') return matchType.UNKNOWN;
-
-  // Identify command name: check if word is in the commands object
-  if (word in commands) {
+function matchEngineCommand(word, identifier, document) {
+  if (word in commands && identifier !== '[') {
     return (document.uri.path.includes("engine.rs2")) ? declaration(matchType.COMMAND) : reference(matchType.COMMAND);
   }
+  return matchType.UNKNOWN;
+}
 
-  // Identify command param: check if encased in brackets & preceeding char is not a closing bracket (block definitions)
-  let closingIndex = line.substring(index).indexOf(')');
-  let openingIndex = line.substring(0, index).lastIndexOf('(');
-  if (openingIndex < 0 || closingIndex < 0 || line.charAt(Math.max(0, openingIndex - 1)) === ']') {
+function matchParameter(word, line, index) {
+  if (line.substring(index).indexOf(')') === -1) {
     return matchType.UNKNOWN;
   }
-  const commandName = line.substring(line.substring(0, openingIndex).lastIndexOf(' ') + 1, openingIndex);
-  const command = commands[commandName];
-  if (!command) {
+  line = stringUtils.truncateMatchingParenthesis(line.substring(0, index));
+  const openCount = (line.match(/\(/g) || []).length;
+  const closeCount = (line.match(/\)/g) || []).length;
+  const openingIndex = stringUtils.nthIndexOf(line, '(', openCount - closeCount);
+  if (openingIndex < 0 || line.charAt(Math.max(0, openingIndex - 1)) === ']') {
     return matchType.UNKNOWN;
   }
-  const param = command.params[(line.substring(openingIndex, index).match(/,/g) || []).length];
-  return !param ? matchType.UNKNOWN : param.matchType;
+  const identifier = (line.substring(0, openingIndex).match(/\(?[a-zA-Z_]+$/) || [])[0].replace(/^\(/, '');
+  const paramIndex = (line.substring(openingIndex).match(/,/g) || []).length;
+  if (identifier === '') {
+    return matchType.UNKNOWN;
+  } else if (identifier === 'queue') {
+    // queue (todo - get queue signature)
+    // name of queue is first param (update identifier to this)
+    // first param could also be a local variable (return UNKNOWN since identifier name is unknown)
+    // 3rd param onwards are custom (2nd param is an int, can ignore it)
+    return matchType.UNKNOWN;
+  } else if (identifier.startsWith('~')) {
+    identifier = identifier.substring(1);
+    // proc (todo - get proc signature) 
+    return matchType.UNKNOWN;
+  } else if (identifier.startsWith('@')) {
+    identifier = identifier.substring(1);
+    // label (todo - get label signature)
+    return matchType.UNKNOWN;
+  } else {
+    const command = commands[identifier];
+    if (!command) {
+      return matchType.UNKNOWN;
+    }
+    const param = command.params[paramIndex];
+    return !param ? matchType.UNKNOWN : param.matchType;
+  }
 }
 
 function reference(type) {
