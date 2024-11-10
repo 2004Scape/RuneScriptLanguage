@@ -4,7 +4,7 @@ const hoverProvider = require('./provider/hover/hoverProvider');
 const recolorProvider = require('./provider/color/recolorProvider');
 const definitionProvider = require('./provider/definition/gotoDefinition');
 
-// Refresh engine commands once every 24 horus
+// Refresh engine commands once every 24 hours
 const updateEngineCommands = () => {
     engineCommands.updateCommands();
     setTimeout(updateEngineCommands, 86_400_000);
