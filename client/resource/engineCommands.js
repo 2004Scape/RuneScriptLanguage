@@ -15,24 +15,23 @@ function updateCommands() {
     var fileText = '';
     response.on('data', chunk => fileText += chunk);
     response.on('end', () => {
-      if (fileText !== '') {
-        clearCommands();
-        let type;
-        let description = '';
-        const lines = stringUtils.getLines(fileText);
-        for (const line of lines) {
-          switch (getLineType(line)) {
-            case lineType.TYPE: 
-              type = parseType(line); 
-              break;
-            case lineType.COMMAND: 
-              parseCommand(line, type, description); 
-              description = '';
-              break;
-            case lineType.DESCRIPTION: 
-              description = line.substring(descriptionPrefix.length); 
-              break;
-          }
+      if (fileText === '') return;
+      clearCommands();
+      let type;
+      let description = '';
+      const lines = stringUtils.getLines(fileText);
+      for (const line of lines) {
+        switch (getLineType(line)) {
+          case lineType.TYPE: 
+            type = parseType(line); 
+            break;
+          case lineType.COMMAND: 
+            parseCommand(line, type, description); 
+            description = '';
+            break;
+          case lineType.DESCRIPTION: 
+            description = line.substring(descriptionPrefix.length); 
+            break;
         }
       }
     });
