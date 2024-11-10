@@ -15,6 +15,8 @@ function updateCommands() {
     var fileText = '';
     response.on('data', chunk => fileText += chunk);
     response.on('end', () => {
+      if (fileText === '') return;
+      clearCommands();
       let type;
       let description = '';
       const lines = stringUtils.getLines(fileText);
@@ -34,6 +36,10 @@ function updateCommands() {
       }
     });
   });
+}
+
+function clearCommands() {
+  Object.keys(commands).forEach(key => delete commands[key]);
 }
 
 function getLineType(line) {
