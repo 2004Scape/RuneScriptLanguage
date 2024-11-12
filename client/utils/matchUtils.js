@@ -11,8 +11,8 @@ const matchWord = async (document, position) => {
 
   const word = document.getText(wordRange);
   const lineText = document.lineAt(position.line).text;
-  if (lineText.startsWith('//') || word.match(/^\d+.?\d+$/) || word === 'null') {
-    return returnDefault(); // Ignore comments and numbers and null
+  if (lineText.startsWith('//') || word.match(/^\d+.?\d+$/) || word === 'null' || word.length <= 1) {
+    return returnDefault(); // Ignore comments and numbers and null and single character words
   }
 
   const prevWord = getPrevWord(document, wordRange.start);
@@ -51,6 +51,7 @@ const matchWord = async (document, position) => {
   return {
     "word": word,
     "fileType": fileType,
+    "prevChar": prevChar,
     "match": match
   }
 }
@@ -119,7 +120,7 @@ function getCommaMatchType(prevWord) {
   switch (prevWord.substring(0, Math.min(5, prevWord.length))) {
     case "oploc": case "aploc": return reference(matchType.LOC);
     case "ophel": case "opobj": return reference(matchType.OBJ);
-    case "opnpc": case "ai_qu": case "ai_ap": case "ai_ti": return reference(matchType.NPC);
+    case "opnpc": case "ai_qu": case "ai_ap": case "ai_ti": case "ai_op": return reference(matchType.NPC);
   }
   return matchType.UNKNOWN;
 }

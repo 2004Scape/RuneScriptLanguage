@@ -11,7 +11,7 @@ const identifierSvc = require('../../resource/identifierSvc');
 const hoverProvider = function(context) {
   return {
     async provideHover(document, position, token) {
-      const { word, fileType, match } = await matchUtils.matchWord(document, position);
+      const { word, fileType, prevChar, match } = await matchUtils.matchWord(document, position);
       if (!word) {
         return null;
       }
@@ -34,6 +34,11 @@ const hoverProvider = function(context) {
             case bodyFormat.VALUE: await buildValueHoverText(word, match, uri, content); break;
             default: appendTitle(word, match, content, (match.id === matchType.GLOBAL_VAR.id) ? fileType : null);
           }
+      }
+
+      if (prevChar === ',' && word.startsWith('_')) {
+        const infoText = `the underscore indicates this refers to any ${match.id.toLowerCase()} with <b>category=${word.substring(1)}</b>`;
+        appendBodyWithLabel(infoText, "info", content);
       }
 
       if (content.value.length) {
