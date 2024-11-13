@@ -37,7 +37,8 @@ const hoverProvider = function(context) {
       }
 
       if (prevChar === ',' && word.startsWith('_')) {
-        const infoText = `the underscore indicates this refers to any ${match.id.toLowerCase()} with <b>category=${word.substring(1)}</b>`;
+        const searchableString = createSearchableString(`category=${word.substring(1)}`, `category=${word.substring(1)}`, searchUtils.getInclusionFiles(match));
+        const infoText = `the underscore indicates this refers to any ${match.id.toLowerCase()} with <b>${searchableString}</b>`;
         appendBodyWithLabel(infoText, "info", content);
       }
 
@@ -145,6 +146,11 @@ function appendBody(text, content) {
 
 function appendBodyWithLabel(text, label, content) {
   appendBody(`<b>${label}:</b> <i>${text}</i>`, content);
+}
+
+function createSearchableString(linkableText, query, filesToInclude, isRegex=false) {
+  const searchOptions = JSON.stringify({ query: query, filesToInclude: filesToInclude, isRegex: isRegex});
+  return `[${linkableText}](${vscode.Uri.parse(`command:workbench.action.findInFiles?${encodeURIComponent(searchOptions)}`)})`;
 }
 
 async function getIdentifier(word, match, uri) {

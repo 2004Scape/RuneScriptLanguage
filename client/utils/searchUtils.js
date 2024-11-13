@@ -12,20 +12,8 @@ const findLocalVar = (fileText, word) => {
 const findDefinition = async function(word, match, fileUri) {
   if (!word || !match) return null;
 
-  let files = [];
-  if (fileUri) {
-    files.push(fileUri);
-  } else {
-    let inclusions;
-    if (match.definitionFile) {
-      inclusions = `**/${match.definitionFile}`;
-    } else {
-      let inclusionsArr = [];
-      match.definitionFiles.forEach(fileType => inclusionsArr.push(`**/*.${fileType}`));
-      inclusions = `{${inclusionsArr.join(",")}}`;
-    }
-    files = await vscode.workspace.findFiles(inclusions) || [];
-  }
+  // If you pass in fileUri, no workspace search is performed 
+  const files = (fileUri) ? [fileUri] : await vscode.workspace.findFiles(getInclusionFiles(match)) || [];
 
   let result;
   const pattern = match.definitionFormat.replace("NAME", word);
@@ -64,4 +52,15 @@ function getPosition(fileText, index, lineIndexOffset) {
   return new vscode.Position(lineNum, lineIndex);
 }
 
-module.exports = { findLocalVar, findDefinition }
+function getInclusionFiles(match) {
+  if (!match) return null;
+  if (match.definitionFile) { // If matchType has a definitionFile defined, only that file will be searched for
+    return `**/${match.definitionFile}`;
+  } else {
+    let inclusionsArr = []; // Otherwise, will serach all file types as defined by matchType.definitionFiles 
+    match.definitionFiles.forEach(fileType => inclusionsArr.push(`**/*.${fileType}`));
+    return `{${inclusionsArr.join(",")}}`;
+  }
+}
+
+module.exports = { findLocalVar, findDefinition, getInclusionFiles };
