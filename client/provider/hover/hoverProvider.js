@@ -75,8 +75,8 @@ function buildCommandHoverText(word, match, content) {
 
 async function buildSignatureHoverText(word, match, uri, content) {
   const identifier = await getIdentifier(word, match, uri);
-  appendTitle(word, match, content);
   if (identifier) {
+    appendTitle(word, match, content);
     appendSignature(identifier, content);
   }
 }
@@ -87,15 +87,13 @@ async function buildBlockHoverText(word, match, uri, content) {
     const typeOverride = (match.id === matchType.GLOBAL_VAR.id) ? identifier.value : null; // differentiate global var type
     appendTitle(word, match, content, typeOverride); 
     appendBlock(identifier, content);
-  } else {
-    appendTitle(word, match, content);
   }
 }
 
 async function buildValueHoverText(word, match, uri, content) {
   const identifier = await getIdentifier(word, match, uri);
-  appendTitle(word, match, content); 
   if (identifier) {
+    appendTitle(word, match, content); 
     appendValue(identifier, content);
   }
 }

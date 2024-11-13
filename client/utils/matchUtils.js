@@ -18,6 +18,7 @@ const matchWord = async (document, position) => {
   const prevWord = getPrevWord(document, wordRange.start);
   const fileType = document.uri.path.split(/[#?]/)[0].split('.').pop().trim();
   const prevChar = wordRange.start.character > 0 ? lineText.charAt(wordRange.start.character - 1) : '';
+  const nextChar = lineText.charAt(wordRange.end.character);
 
   // try to find a match based on the character proceeding the word
   let match = matchType.UNKNOWN;
@@ -26,7 +27,7 @@ const matchWord = async (document, position) => {
     case ',': match = getCommaMatchType(prevWord); break;
     case '^': match = getConstantMatchType(fileType); break;
     case '%': match = reference(matchType.GLOBAL_VAR); break;
-    case '@': match = reference(matchType.LABEL); break;
+    case '@': match = getAtMatchType(nextChar); break;
     case '~': match = reference(matchType.PROC); break;
     case '$': match = getLocalVarMatchType(prevWord); break;
     case '=': match = getEqualsMatchType(prevWord); break;
@@ -82,6 +83,10 @@ function getLocalVarMatchType(prevWord) {
   const defKeyword = "\\b(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|queue|weakqueue|timer|softtimer|char|dbcolumn|proc|label)\\b";
   const match = prevWord.match(new RegExp(defKeyword));
   return !match ? reference(matchType.LOCAL_VAR) : declaration(matchType.LOCAL_VAR);
+}
+
+function getAtMatchType(nextChar) {
+  return nextChar !== '@' ? reference(matchType.LABEL) : matchType.UNKNOWN
 }
 
 function getOpenBracketMatchType(fileType) {
