@@ -3,8 +3,6 @@ const fs = require('fs');
 const stringUtils = require('./stringUtils');
 const responseText = require('../enum/responseText');
 
-const exclusions = "{**​/node_modules/**,**/ref/**,**/public/**,**/pack/**,**/3rdparty/**,**/jagex2/**,**/lostcity/**}";
-
 const findLocalVar = (fileText, word) => {
   const varKeyword = "(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|queue|weakqueue|timer|softtimer|char|dbcolumn|proc|label)\\b";
   const matches = [...fileText.matchAll(new RegExp(`${varKeyword} \\$${word}(,|;|=|\\)| ){1}`, "g"))];
@@ -19,14 +17,14 @@ const findDefinition = async function(word, match, fileUri) {
     files.push(fileUri);
   } else {
     let inclusions;
-    if (match.fileName) {
-      inclusions = `**/${match.fileName}`;
+    if (match.definitionFile) {
+      inclusions = `**/${match.definitionFile}`;
     } else {
       let inclusionsArr = [];
       match.definitionFiles.forEach(fileType => inclusionsArr.push(`**/*.${fileType}`));
       inclusions = `{${inclusionsArr.join(",")}}`;
     }
-    files = await vscode.workspace.findFiles(inclusions, exclusions) || [];
+    files = await vscode.workspace.findFiles(inclusions) || [];
   }
 
   let result;
