@@ -1,6 +1,6 @@
 const https = require("https");
 const stringUtils = require('../utils/stringUtils');
-const matchType = require('../enum/MatchType');
+const identifierSvc = require('./identifierSvc');
 
 const remoteEngineFileUrl = "https://raw.githubusercontent.com/2004Scape/Server/refs/heads/main/data/src/scripts/engine.rs2";
 
@@ -30,7 +30,7 @@ function updateCommands() {
             description = '';
             break;
           case lineType.DESCRIPTION: 
-            description = line.substring(descriptionPrefix.length); 
+            description = line.substring(descriptionPrefix.length).toLowerCase(); 
             break;
         }
       }
@@ -58,38 +58,9 @@ function parseCommand(line, type, description) {
   const command = line.substring(commandPrefix.length, line.indexOf(']'));
   if (command.startsWith('.')) return; // ignore these commands since params are always the same
   
-  // Parse input params
-  const params = [];
-  let openingIndex = line.indexOf('(');
-  let closingIndex = line.indexOf(')');
-  if (openingIndex >= 0 && closingIndex >= 0 && ++openingIndex !== closingIndex) {
-    line.substring(openingIndex, closingIndex).split(',').forEach(param => {
-      if (param.startsWith(' ')) param = param.substring(1);
-      const split = param.split(' ');
-      if (split.length === 2) {
-        const match = Object.keys(matchType).filter(key => (matchType[key].types || []).includes(split[0]));
-        params.push({type: split[0], name: split[1], matchType: match.length > 0 ? matchType[match[0]] : matchType.UNKNOWN});
-      }
-    });
-  }
+  const { params, returns } = identifierSvc.parseSignature(line);
 
-  // Parse response type
-  let returns = '';
-  line = line.substring(closingIndex + 1);
-  openingIndex = line.indexOf('(');
-  closingIndex = line.indexOf(')');
-  if (openingIndex >= 0 && closingIndex >= 0 && ++openingIndex !== closingIndex) {
-    returns = line.substring(openingIndex, closingIndex);
-  }
-
-  commands[command] = {
-    name: command,
-    type: type,
-    params: params,
-    paramsText: params.map(param => `${param.type} ${param.name}`).join(', '),
-    returns: returns,
-    description: description
-  };
+  commands[command] = identifierSvc.build(command, null, params, returns, description, type, null);
 }
 
 module.exports = { commands, updateCommands };

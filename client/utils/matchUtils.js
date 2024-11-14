@@ -1,8 +1,9 @@
 const matchType = require("../enum/MatchType");
 const stringUtils = require("../utils/stringUtils");
 const { commands } = require("../resource/engineCommands");
+const identifierSvc = require('../resource/identifierSvc');
 
-const matchWord = (document, position) => {
+const matchWord = async (document, position) => {
   const wordRange = document.getWordRangeAtPosition(position);
   if (!wordRange) {
     return returnDefault();
@@ -10,35 +11,37 @@ const matchWord = (document, position) => {
 
   const word = document.getText(wordRange);
   const lineText = document.lineAt(position.line).text;
-  if (lineText.startsWith('//') || word.match(/^\d+.?\d+$/) || word === 'null') {
-    return returnDefault(); // Ignore comments and numbers and null
+  if (lineText.startsWith('//') || word.match(/^\d+.?\d+$/) || word === 'null' || word.length <= 1) {
+    return returnDefault(); // Ignore comments and numbers and null and single character words
   }
 
   const prevWord = getPrevWord(document, wordRange.start);
   const fileType = document.uri.path.split(/[#?]/)[0].split('.').pop().trim();
-  const identifier = wordRange.start.character > 0 ? lineText.charAt(wordRange.start.character - 1) : '';
+  const prevChar = wordRange.start.character > 0 ? lineText.charAt(wordRange.start.character - 1) : '';
+  const nextChar = lineText.charAt(wordRange.end.character);
 
   // try to find a match based on the character proceeding the word
   let match = matchType.UNKNOWN;
-    switch (identifier) {
+  switch (prevChar) {
     case '[': match = getOpenBracketMatchType(fileType); break;
     case ',': match = getCommaMatchType(prevWord); break;
     case '^': match = getConstantMatchType(fileType); break;
     case '%': match = reference(matchType.GLOBAL_VAR); break;
-    case '@': match = reference(matchType.LABEL); break;
+    case '@': match = getAtMatchType(nextChar); break;
     case '~': match = reference(matchType.PROC); break;
     case '$': match = getLocalVarMatchType(prevWord); break;
     case '=': match = getEqualsMatchType(prevWord); break;
+    case '(': match = getParenthesisMatchType(prevWord); break;
   }
 
   // try to find a match in the list of command names
   if (match.id === matchType.UNKNOWN.id) {
-    match = matchEngineCommand(word, identifier, document);
+    match = matchEngineCommand(word, prevChar, document);
   }
 
   // try to match parameters (possiblities: command, label, proc, or queue parameters)
   if (match.id === matchType.UNKNOWN.id) {
-    match = matchParameter(word, lineText, position.character);
+    match = await matchParameter(word, lineText, position.character);
   }
 
   // return default if no matches found
@@ -49,9 +52,7 @@ const matchWord = (document, position) => {
   return {
     "word": word,
     "fileType": fileType,
-    "prevWord": prevWord,
-    "identifier": identifier,
-    "lineText": lineText,
+    "prevChar": prevChar,
     "match": match
   }
 }
@@ -82,6 +83,10 @@ function getLocalVarMatchType(prevWord) {
   const defKeyword = "\\b(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|queue|weakqueue|timer|softtimer|char|dbcolumn|proc|label)\\b";
   const match = prevWord.match(new RegExp(defKeyword));
   return !match ? reference(matchType.LOCAL_VAR) : declaration(matchType.LOCAL_VAR);
+}
+
+function getAtMatchType(nextChar) {
+  return nextChar !== '@' ? reference(matchType.LABEL) : matchType.UNKNOWN
 }
 
 function getOpenBracketMatchType(fileType) {
@@ -120,7 +125,7 @@ function getCommaMatchType(prevWord) {
   switch (prevWord.substring(0, Math.min(5, prevWord.length))) {
     case "oploc": case "aploc": return reference(matchType.LOC);
     case "ophel": case "opobj": return reference(matchType.OBJ);
-    case "opnpc": case "ai_qu": case "ai_ap": case "ai_ti": return reference(matchType.NPC);
+    case "opnpc": case "ai_qu": case "ai_ap": case "ai_ti": case "ai_op": return reference(matchType.NPC);
   }
   return matchType.UNKNOWN;
 }
@@ -135,6 +140,13 @@ function getEqualsMatchType(prevWord) {
   return matchType.UNKNOWN;
 }
 
+function getParenthesisMatchType(prevWord) {
+  switch (prevWord) {
+    case "queue": return reference(matchType.QUEUE);
+  }
+  return matchType.UNKNOWN;
+}
+
 function getConstantMatchType(fileType) {
 	if (fileType === "constant") {
 		return declaration(matchType.CONSTANT);
@@ -142,14 +154,14 @@ function getConstantMatchType(fileType) {
 	return reference(matchType.CONSTANT);
 }
 
-function matchEngineCommand(word, identifier, document) {
-  if (word in commands && identifier !== '[') {
+function matchEngineCommand(word, prevChar, document) {
+  if (word in commands && prevChar !== '[') {
     return (document.uri.path.includes("engine.rs2")) ? declaration(matchType.COMMAND) : reference(matchType.COMMAND);
   }
   return matchType.UNKNOWN;
 }
 
-function matchParameter(word, line, index) {
+async function matchParameter(word, line, index) {
   if (line.substring(index).indexOf(')') === -1) {
     return matchType.UNKNOWN;
   }
@@ -160,32 +172,26 @@ function matchParameter(word, line, index) {
   if (openingIndex < 0 || line.charAt(Math.max(0, openingIndex - 1)) === ']') {
     return matchType.UNKNOWN;
   }
-  const identifier = (line.substring(0, openingIndex).match(/\(?[a-zA-Z_]+$/) || [])[0].replace(/^\(/, '');
+  let name = (line.substring(0, openingIndex).match(/\(?[a-zA-Z_~@]+$/) || [])[0].replace(/^\(/, '');
   const paramIndex = (line.substring(openingIndex).match(/,/g) || []).length;
-  if (identifier === '') {
-    return matchType.UNKNOWN;
-  } else if (identifier === 'queue') {
-    // queue (todo - get queue signature)
-    // name of queue is first param (update identifier to this)
-    // first param could also be a local variable (return UNKNOWN since identifier name is unknown)
-    // 3rd param onwards are custom (2nd param is an int, can ignore it)
-    return matchType.UNKNOWN;
-  } else if (identifier.startsWith('~')) {
-    identifier = identifier.substring(1);
-    // proc (todo - get proc signature) 
-    return matchType.UNKNOWN;
-  } else if (identifier.startsWith('@')) {
-    identifier = identifier.substring(1);
-    // label (todo - get label signature)
-    return matchType.UNKNOWN;
-  } else {
-    const command = commands[identifier];
-    if (!command) {
+
+  let identifier;
+  if (name === 'queue') {
+    if (paramIndex < 2) {
       return matchType.UNKNOWN;
     }
-    const param = command.params[paramIndex];
-    return !param ? matchType.UNKNOWN : param.matchType;
+    identifier = await identifierSvc.get(line.substring(openingIndex + 1, line.indexOf(',')), matchType.QUEUE);
+  } else if (name.startsWith('@')) {
+    identifier = await identifierSvc.get(name.substring(1), matchType.LABEL);
+  } else if (name.startsWith('~')) {
+    identifier = await identifierSvc.get(name.substring(1), matchType.PROC);
+  } else {
+    identifier = commands[name];
   }
+  if (!identifier || !identifier.params || identifier.params.length <= paramIndex) {
+    return matchType.UNKNOWN;
+  }
+  return identifier.params[paramIndex].matchType;
 }
 
 function reference(type) {

@@ -2,43 +2,33 @@ const vscode = require('vscode');
 const matchType = require("../../enum/MatchType");
 const searchUtils = require("../../utils/searchUtils");
 const matchUtils = require("../../utils/matchUtils");
+const identifierSvc = require("../../resource/identifierSvc");
 
 const gotoDefinitionProvider = {
   async provideDefinition(document, position, token) {
-    const { match, word } = matchUtils.matchWord(document, position);
+    const { match, word } = await matchUtils.matchWord(document, position);
     if (match.id === matchType.UNKNOWN.id || !word) {
       return null;
     }
     if (match.declaration) {
       return new vscode.Location(document.uri, position);
     }
-    switch (match.id) {
-      case matchType.LOCAL_VAR.id: return gotoLocalVar(document, position, word);
-      case matchType.INTERFACE.id: return gotoSpecific(match, word, "interface.pack");
-      case matchType.COMMAND.id: return gotoSpecific(match, word, "engine.rs2");
-      case matchType.SYNTH.id: return gotoSpecific(match, word, "sound.pack");
-      default: return gotoDefault(match, word);
+    if (match.id === matchType.LOCAL_VAR.id) {
+      return gotoLocalVar(document, position, word);
     }
+    return gotoDefinition(word, match);
   }
 }
 
 const gotoLocalVar = (document, position, word) => {
   const fileText = document.getText(new vscode.Range(new vscode.Position(0, 0), position));
-  const match = searchUtils.searchLocalVar(fileText, word);
+  const match = searchUtils.findLocalVar(fileText, word);
   return !match ? null : new vscode.Location(document.uri, document.positionAt(match.index).translate(0, match[1].length + 1));
 }
 
-const gotoSpecific = (match, word, fileName) => {
-  const offset = match.definitionFormat.indexOf("NAME");
-  const pattern = match.definitionFormat.replace("NAME", word);
-  return searchUtils.searchFile(pattern, fileName, offset);
-}
-
-const gotoDefault = async (match, word) => {
-  const pattern = match.definitionFormat.replace("NAME", word);
-  const offset = match.definitionFormat.indexOf("NAME");
-  const results = await searchUtils.searchFiles(pattern, match.definitionFiles, offset, 1);
-  return (!results || results.length === 0) ? null : results[0].location;
+const gotoDefinition = async (word, match) => {
+  const definition = await identifierSvc.get(word, match);
+  return (definition) ? definition.location : null;
 }
 
 module.exports = gotoDefinitionProvider;

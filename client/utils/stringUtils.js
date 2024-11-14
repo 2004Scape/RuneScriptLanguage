@@ -1,12 +1,19 @@
-const eolRegex = /\r\n|\r|\n/;
+const endOfLineRegex = /\r\n|\r|\n/;
+// finds first blank line, comment line, line starting with '[', or line starting with "val=" (special case for enums)
+const endOfBlockRegex = /[\r\n|\r|\n](\s*|\/\/.+|\[.+|val=.+)[\r\n|\r|\n]/; 
 
 const getLineText = function(input) {
-  const endOfLine = eolRegex.exec(input);
+  const endOfLine = endOfLineRegex.exec(input);
   return !endOfLine ? input : input.substring(0, endOfLine.index);
 }
 
 const getLines = function(input) {
-  return input.split(eolRegex);
+  return input.split(endOfLineRegex);
+}
+
+const getBlockText = function(input) {
+  const endOfBlock = endOfBlockRegex.exec(input);
+  return !endOfBlock ? input : input.substring(0, endOfBlock.index);
 }
 
 const nthIndexOf = function(input, pattern, n) {
@@ -25,7 +32,7 @@ const truncateMatchingParenthesis = function(str) {
     if (str.charAt(i) === '(') count++;
     if (str.charAt(i) === ')' && --count === 0) truncateIndex = i;
   }
-  return str.substring(truncateIndex + 1);
+  return (truncateIndex > 0) ? str.substring(truncateIndex + 1) : str;
 }
 
-module.exports = { getLineText, getLines, nthIndexOf, truncateMatchingParenthesis };
+module.exports = { getLineText, getLines, getBlockText, nthIndexOf, truncateMatchingParenthesis };
