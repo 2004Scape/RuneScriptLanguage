@@ -21,9 +21,18 @@ const getPreviousLine = function(str) {
   return lines[lines.length - 2] || '';
 }
 
-const getBlockText = function(input) {
+const getBlockText = function(input, match) {
   const endOfBlock = endOfBlockRegex.exec(input);
-  return !endOfBlock ? input : input.substring(0, endOfBlock.index);
+  let block = !endOfBlock ? input : input.substring(0, endOfBlock.index);
+  if (match && match.blockInclusionData.length > 0 && block.length > 0) {
+    const blockLines = getLines(block);
+    block = blockLines[0];
+    for (let i = 1; i < blockLines.length; i++) {
+      const include = match.blockInclusionData.some(dataTagToInclude => blockLines[i].startsWith(dataTagToInclude));
+      if (include) block += `\n${blockLines[i]}`;
+    }
+  }
+  return block;
 }
 
 const nthIndexOf = function(input, pattern, n) {
