@@ -3,6 +3,7 @@ const engineCommands = require('./resource/engineCommands');
 const hoverProvider = require('./provider/hover/hoverProvider');
 const recolorProvider = require('./provider/color/recolorProvider');
 const definitionProvider = require('./provider/definition/gotoDefinition');
+const identifierCache = require('./cache/identifierCache');
 
 // Refresh engine commands once every 24 hours
 const updateEngineCommands = () => {
@@ -12,6 +13,12 @@ const updateEngineCommands = () => {
 
 function activate(context) {
     updateEngineCommands();
+
+    // Flush entire cache if git branch changes
+    vscode.workspace.createFileSystemWatcher('**/.git/HEAD').onDidCreate(() => identifierCache.clear());
+
+    // Flush cache identifiers within a file if that file is updated
+    vscode.workspace.onDidSaveTextDocument(document => identifierCache.clearIdentifiersInFile(document.uri));
 
     vscode.languages.registerHoverProvider('runescript', hoverProvider(context));
     vscode.languages.registerHoverProvider('locconfig', hoverProvider(context));
