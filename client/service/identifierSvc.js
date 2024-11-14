@@ -4,6 +4,7 @@ const stringUtils = require('../utils/stringUtils');
 const search = require('./searchSvc');
 
 async function get(word, match, fileUri) {
+  // todo: implement caching for declarations to avoid excessive duplicate searching
   const result = await search.findDefinition(word, match, fileUri);
   if (!result) {
     return null;
