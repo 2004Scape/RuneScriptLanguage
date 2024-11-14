@@ -2,11 +2,11 @@ const vscode = require('vscode');
 const path = require('path');
 const matchUtils = require('../../utils/matchUtils');
 const stringUtils = require('../../utils/stringUtils');
-const searchUtils = require('../../utils/searchUtils');
+const searchSvc = require('../../service/searchSvc');
 const matchType = require('../../enum/MatchType');
 const { commands } = require('../../resource/engineCommands');
 const bodyFormat = require('../../enum/BodyFormat');
-const identifierSvc = require('../../resource/identifierSvc');
+const identifierSvc = require('../../service/identifierSvc');
 
 const hoverProvider = function(context) {
   return {
@@ -36,8 +36,9 @@ const hoverProvider = function(context) {
           }
       }
 
+      // todo - instead of this, add a new matcher for these 
       if (prevChar === ',' && word.startsWith('_')) {
-        const searchableString = createSearchableString(`category=${word.substring(1)}`, `category=${word.substring(1)}`, searchUtils.getInclusionFiles(match));
+        const searchableString = createSearchableString(`category=${word.substring(1)}`, `category=${word.substring(1)}`, searchSvc.getInclusionFiles(match));
         const infoText = `the underscore indicates this refers to any ${match.id.toLowerCase()} with <b>${searchableString}</b>`;
         appendBodyWithLabel(infoText, "info", content);
       }
@@ -53,14 +54,14 @@ function buildLocalVarHoverText(document, position, word, match, content) {
   appendTitle(word, match, content);
   if (match.declaration === false) {
     const fileText = document.getText(new vscode.Range(new vscode.Position(0, 0), position));
-    const match = searchUtils.findLocalVar(fileText, word);
+    const match = searchSvc.findLocalVar(fileText, word);
     const isDef = fileText.substring(Math.max(match.index - 4, 0), match.index) === "def_";
     if (isDef) {
-      const line = stringUtils.getLineText(fileText.substring(match.index - 4));;
-      appendBody(line.substring(0, line.indexOf(";")), content);
+      const line = stringUtils.getLineText(fileText.substring(match.index - 4));
+      appendCodeBlock(line.substring(0, line.indexOf(";")), match, content);
     } else {
       const lineText = stringUtils.getLineText(fileText.substring(match.index));
-      appendBody(`input parameter (${lineText.substring(0, lineText.indexOf(word) + word.length)})`, content);
+      appendCodeBlock(`parameter: ${lineText.substring(0, lineText.indexOf(word) + word.length)}`, match, content);
     }
   }
 }
@@ -71,14 +72,16 @@ function buildCommandHoverText(word, match, content) {
     return;
   }
   appendTitle(`${word} (${command.value})`, match, content);
-  appendSignature(command, content);
+  appendDescription(command, content);
+  appendSignature(command, match, content);
 }
 
 async function buildSignatureHoverText(word, match, uri, content) {
   const identifier = await getIdentifier(word, match, uri);
   if (identifier) {
     appendTitle(word, match, content);
-    appendSignature(identifier, content);
+    appendDescription(identifier, content);
+    appendSignature(identifier, match, content);
   }
 }
 
@@ -87,7 +90,8 @@ async function buildBlockHoverText(word, match, uri, content) {
   if (identifier) {
     const typeOverride = (match.id === matchType.GLOBAL_VAR.id) ? identifier.value : null; // differentiate global var type
     appendTitle(word, match, content, typeOverride); 
-    appendBlock(identifier, content);
+    appendDescription(identifier, content);
+    if (identifier.block.length > 0) appendCodeBlock(stringUtils.skipFirstLine(identifier.block), match, content);
   }
 }
 
@@ -95,37 +99,17 @@ async function buildValueHoverText(word, match, uri, content) {
   const identifier = await getIdentifier(word, match, uri);
   if (identifier) {
     appendTitle(word, match, content); 
-    appendValue(identifier, content);
+    appendDescription(identifier, content);
+    if (identifier.value.length > 0) appendCodeBlock(`${identifier.value}`, match, content);
   }
 }
 
-function appendSignature(identifier, content) {
-  if (identifier.description.length > 0) {
-    appendBodyWithLabel(identifier.description, "desc", content);
-  }
+function appendSignature(identifier, match, content) {
   if (identifier.paramsText.length > 0) {
-    appendBodyWithLabel(identifier.paramsText, "params", content);
+    appendCodeBlock(`params: ${identifier.paramsText}`, match, content);
   }
   if (identifier.returns.length > 0) {
-    appendBodyWithLabel(identifier.returns, "returns", content);
-  }
-}
-
-function appendBlock(identifier, content, terminatingText) {
-  terminatingText = terminatingText || '123';
-  const startIndex = 1;
-  const lines = stringUtils.getLines(identifier.block);
-  if (lines.length > startIndex) {
-    for (let i = startIndex; i < lines.length; i++) {
-      if (!/\S/.test(lines[i]) || lines[i].startsWith(terminatingText)) break;
-      appendBody(lines[i], content);
-    }
-  }
-}
-
-function appendValue(identifier, content) {
-  if (identifier.value.length > 0) {
-    appendBodyWithLabel(identifier.value, "value", content);
+    appendCodeBlock(`returns: ${identifier.returns}`, match, content);
   }
 }
 
@@ -145,12 +129,22 @@ function appendBody(text, content) {
 }
 
 function appendBodyWithLabel(text, label, content) {
-  appendBody(`<b>${label}:</b> <i>${text}</i>`, content);
+  appendBody(`${label}: <i>${text}</i>`, content);
+}
+
+function appendCodeBlock(codeBlock, match, content) {
+  content.appendCodeblock(codeBlock, match.language);
 }
 
 function createSearchableString(linkableText, query, filesToInclude, isRegex=false) {
   const searchOptions = JSON.stringify({ query: query, filesToInclude: filesToInclude, isRegex: isRegex});
   return `[${linkableText}](${vscode.Uri.parse(`command:workbench.action.findInFiles?${encodeURIComponent(searchOptions)}`)})`;
+}
+
+function appendDescription(identifier, content) {
+  if (identifier && identifier.description.length > 0) {
+    appendBody(`<i>${identifier.description}</i>`, content);
+  }
 }
 
 async function getIdentifier(word, match, uri) {

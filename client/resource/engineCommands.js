@@ -1,6 +1,6 @@
 const https = require("https");
 const stringUtils = require('../utils/stringUtils');
-const identifierSvc = require('./identifierSvc');
+const identifierSvc = require('../service/identifierSvc');
 
 const remoteEngineFileUrl = "https://raw.githubusercontent.com/2004Scape/Server/refs/heads/main/data/src/scripts/engine.rs2";
 

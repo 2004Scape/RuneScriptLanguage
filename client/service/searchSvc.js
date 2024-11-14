@@ -1,6 +1,6 @@
 const vscode = require('vscode');
 const fs = require('fs');
-const stringUtils = require('./stringUtils');
+const stringUtils = require('../utils/stringUtils');
 const responseText = require('../enum/responseText');
 
 const findLocalVar = (fileText, word) => {
@@ -30,9 +30,17 @@ const findDefinition = async function(word, match, fileUri) {
 
 function buildSearchResult(fileText, index, fileUri, textType, lineIndexOffset) {
   return {
+    "desc": getDescription(fileText, index),
     "text": getReturnText(textType, fileText, index),
     "location": new vscode.Location(fileUri, getPosition(fileText, index, lineIndexOffset))
   }
+}
+
+function getDescription(fileText, index) {
+  const prevLine = stringUtils.getPreviousLine(fileText.substring(0, index));
+  let descIndex = prevLine.indexOf('desc:');
+  descIndex = descIndex > 0 ? descIndex : prevLine.indexOf('info:');
+  return (prevLine.startsWith('//') && descIndex >= 0) ? prevLine.substring(descIndex + 5).trim() : '';
 }
 
 function getReturnText(textType, fileText, index) {

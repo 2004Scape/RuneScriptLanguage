@@ -1,7 +1,7 @@
 const matchType = require("../enum/MatchType");
 const stringUtils = require("../utils/stringUtils");
 const { commands } = require("../resource/engineCommands");
-const identifierSvc = require('../resource/identifierSvc');
+const identifierSvc = require('../service/identifierSvc');
 
 const matchWord = async (document, position) => {
   const wordRange = document.getWordRangeAtPosition(position);
