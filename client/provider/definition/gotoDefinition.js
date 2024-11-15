@@ -1,8 +1,8 @@
 const vscode = require('vscode');
 const matchType = require("../../enum/MatchType");
-const searchUtils = require("../../utils/searchUtils");
+const searchSvc = require("../../service/searchSvc");
 const matchUtils = require("../../utils/matchUtils");
-const identifierSvc = require("../../resource/identifierSvc");
+const identifierSvc = require("../../service/identifierSvc");
 
 const gotoDefinitionProvider = {
   async provideDefinition(document, position, token) {
@@ -22,7 +22,7 @@ const gotoDefinitionProvider = {
 
 const gotoLocalVar = (document, position, word) => {
   const fileText = document.getText(new vscode.Range(new vscode.Position(0, 0), position));
-  const match = searchUtils.findLocalVar(fileText, word);
+  const match = searchSvc.findLocalVar(fileText, word);
   return !match ? null : new vscode.Location(document.uri, document.positionAt(match.index).translate(0, match[1].length + 1));
 }
 

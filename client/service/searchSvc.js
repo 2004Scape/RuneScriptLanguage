@@ -1,6 +1,6 @@
 const vscode = require('vscode');
 const fs = require('fs');
-const stringUtils = require('./stringUtils');
+const stringUtils = require('../utils/stringUtils');
 const responseText = require('../enum/responseText');
 
 const findLocalVar = (fileText, word) => {
@@ -21,24 +21,32 @@ const findDefinition = async function(word, match, fileUri) {
     const fileText = fs.readFileSync(fileUri.path, "utf8");
     const index = fileText.indexOf(pattern);
     if (index >= 0) {
-      result = buildSearchResult(fileText, index, fileUri, match.responseText, match.definitionFormat.indexOf("NAME"));
+      result = buildSearchResult(fileText, index, fileUri, match, match.definitionFormat.indexOf("NAME"));
       return true; //short circuit at 1 result
     }
   });
   return result;
 }
 
-function buildSearchResult(fileText, index, fileUri, textType, lineIndexOffset) {
+function buildSearchResult(fileText, index, fileUri, match, lineIndexOffset) {
   return {
-    "text": getReturnText(textType, fileText, index),
+    "desc": getDescription(fileText, index),
+    "text": getReturnText(match, fileText, index),
     "location": new vscode.Location(fileUri, getPosition(fileText, index, lineIndexOffset))
   }
 }
 
-function getReturnText(textType, fileText, index) {
-  switch(textType) {
+function getDescription(fileText, index) {
+  const prevLine = stringUtils.getPreviousLine(fileText.substring(0, index));
+  let descIndex = prevLine.indexOf('desc:');
+  descIndex = descIndex > 0 ? descIndex : prevLine.indexOf('info:');
+  return (prevLine.startsWith('//') && descIndex >= 0) ? prevLine.substring(descIndex + 5).trim() : '';
+}
+
+function getReturnText(match, fileText, index) {
+  switch(match.responseText) {
     case responseText.FULL: return fileText;
-    case responseText.BLOCK: return stringUtils.getBlockText(fileText.substring(index));
+    case responseText.BLOCK: return stringUtils.getBlockText(fileText.substring(index), match);
     case responseText.LINE: return stringUtils.getLineText(fileText.substring(index));
     default: return '';
   }

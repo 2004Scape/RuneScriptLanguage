@@ -11,9 +11,28 @@ const getLines = function(input) {
   return input.split(endOfLineRegex);
 }
 
-const getBlockText = function(input) {
+const skipFirstLine = function(input) {
+  const endOfLine = endOfLineRegex.exec(input);
+  return !endOfLine ? input : input.substring(endOfLine.index + 1);
+}
+
+const getPreviousLine = function(str) {
+  const lines = getLines(str);
+  return lines[lines.length - 2] || '';
+}
+
+const getBlockText = function(input, match) {
   const endOfBlock = endOfBlockRegex.exec(input);
-  return !endOfBlock ? input : input.substring(0, endOfBlock.index);
+  let block = !endOfBlock ? input : input.substring(0, endOfBlock.index);
+  if (match && match.blockInclusionData.length > 0 && block.length > 0) {
+    const blockLines = getLines(block);
+    block = blockLines[0];
+    for (let i = 1; i < blockLines.length; i++) {
+      const include = match.blockInclusionData.some(dataTagToInclude => blockLines[i].startsWith(dataTagToInclude));
+      if (include) block += `\n${blockLines[i]}`;
+    }
+  }
+  return block;
 }
 
 const nthIndexOf = function(input, pattern, n) {
@@ -35,4 +54,4 @@ const truncateMatchingParenthesis = function(str) {
   return (truncateIndex > 0) ? str.substring(truncateIndex + 1) : str;
 }
 
-module.exports = { getLineText, getLines, getBlockText, nthIndexOf, truncateMatchingParenthesis };
+module.exports = { getLineText, getLines, skipFirstLine, getPreviousLine, getBlockText, nthIndexOf, truncateMatchingParenthesis };

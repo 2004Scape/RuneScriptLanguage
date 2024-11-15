@@ -1,7 +1,7 @@
 const bodyFormat = require('../enum/BodyFormat');
 const matchType = require('../enum/MatchType');
 const stringUtils = require('../utils/stringUtils');
-const search = require('../utils/searchUtils');
+const search = require('./searchSvc');
 
 async function get(word, match, fileUri) {
   // todo: implement caching for declarations to avoid excessive duplicate searching
@@ -9,37 +9,23 @@ async function get(word, match, fileUri) {
   if (!result) {
     return null;
   }
-  return parseDefinitionResult(word, match, result.text, result.location);
+  return parseDefinitionResult(word, match, result.text, result.location, result.desc);
 }
 
-function parseDefinitionResult(word, match, text, location) {
+function parseDefinitionResult(word, match, text, location, desc) {
   switch(match.id) {
-    case matchType.CONSTANT.id: return parseConstant(word, text, location); 
-    case matchType.GLOBAL_VAR.id: return parseGlobalVar(word, text, location); 
-    case matchType.ENUM.id: return parseEnum(word, text, location);
-    default: return parseDefault(word, match, text, location);
+    case matchType.GLOBAL_VAR.id: return parseGlobalVar(word, text, location, desc); 
+    default: return parseDefault(word, match, text, location, desc);
   }
 }
 
-function parseConstant(word, text, location) {
-  const split = text.split('=');
-  const value = (split.length === 2) ? split[1].trim() : null;
-  return build(word, location, null, null, null, value, null);
-}
-
-function parseGlobalVar(word, text, location) {
+function parseGlobalVar(word, text, location, desc) {
   const fileType = location.uri.path.split(/[#?]/)[0].split('.').pop().trim() || 'varp';
-  return build(word, location, null, null, null, fileType, text);
+  return build(word, location, null, null, desc, fileType, text);
 }
 
-function parseEnum(word, text, location) {
-  text = text.replace("inputtype=", "<b>input: </b>");
-  text = text.replace("outputtype=", "<b>output: </b>");
-  return build(word, location, null, null, null, null, text);
-}
-
-function parseDefault(word, match, text, location) {
-  const identifier = build(word, location, null, null, null, null, null);
+function parseDefault(word, match, text, location, desc) {
+  const identifier = build(word, location, null, null, desc, null, null);
   if (match.declarationBodyFormat === bodyFormat.SIGNATURE || match.referenceBodyFormat === bodyFormat.SIGNATURE) {
     const { params, returns } = parseSignature(stringUtils.getLineText(text));
     identifier.params = params;
