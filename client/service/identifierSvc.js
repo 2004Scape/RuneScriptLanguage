@@ -1,7 +1,7 @@
 const bodyFormat = require('../enum/BodyFormat');
 const matchType = require('../enum/MatchType');
 const stringUtils = require('../utils/stringUtils');
-const search = require('../utils/searchUtils');
+const search = require('./searchSvc');
 const identifierCache = require('../cache/identifierCache');
 
 async function get(word, match, fileUri) {
