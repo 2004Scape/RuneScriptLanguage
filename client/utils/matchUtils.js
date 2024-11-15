@@ -112,6 +112,9 @@ function getOpenBracketMatchType(fileType) {
 }
 
 function getCommaMatchType(prevWord, nextChar) {
+  if (prevWord === 'p') {
+    return reference(matchType.MESANIM);
+  }
   if (nextChar === ']') {
     const trigger = runescriptTrigger[prevWord.toUpperCase()];
     if (trigger) {
