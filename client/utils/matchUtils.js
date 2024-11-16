@@ -2,6 +2,7 @@ const matchType = require("../enum/MatchType");
 const stringUtils = require("../utils/stringUtils");
 const { commands } = require("../resource/engineCommands");
 const identifierSvc = require('../service/identifierSvc');
+const runescriptTrigger = require("../resource/triggers");
 
 const matchWord = async (document, position) => {
   const wordRange = document.getWordRangeAtPosition(position);
@@ -24,7 +25,7 @@ const matchWord = async (document, position) => {
   let match = matchType.UNKNOWN;
   switch (prevChar) {
     case '[': match = getOpenBracketMatchType(fileType); break;
-    case ',': match = getCommaMatchType(prevWord); break;
+    case ',': match = getCommaMatchType(prevWord, nextChar); break;
     case '^': match = getConstantMatchType(fileType); break;
     case '%': match = reference(matchType.GLOBAL_VAR); break;
     case '@': match = getAtMatchType(nextChar); break;
@@ -110,22 +111,15 @@ function getOpenBracketMatchType(fileType) {
   return matchType.UNKNOWN;
 }
 
-function getCommaMatchType(prevWord) {
-  switch (prevWord) {
-    case "proc": return declaration(matchType.PROC);
-    case "label": return declaration(matchType.LABEL);
-    case "queue": return declaration(matchType.QUEUE);
-    case "timer": return declaration(matchType.TIMER);
-    case "softtimer": return declaration(matchType.SOFTTIMER);
-    case "walktrigger": return declaration(matchType.WALKTRIGGER);
-    case "opplayeru": case "applayeru": return reference(matchType.OBJ);
-    case "opnpct": case "opplayert": case "apnpct": case "applayert": return reference(matchType.INTERFACE);
-    case "p": return reference(matchType.MESANIM);
+function getCommaMatchType(prevWord, nextChar) {
+  if (prevWord === 'p') {
+    return reference(matchType.MESANIM);
   }
-  switch (prevWord.substring(0, Math.min(5, prevWord.length))) {
-    case "oploc": case "aploc": return reference(matchType.LOC);
-    case "ophel": case "opobj": return reference(matchType.OBJ);
-    case "opnpc": case "ai_qu": case "ai_ap": case "ai_ti": case "ai_op": return reference(matchType.NPC);
+  if (nextChar === ']') {
+    const trigger = runescriptTrigger[prevWord.toUpperCase()];
+    if (trigger) {
+      return trigger.declaration ? declaration(trigger.match) : reference(trigger.match);
+    }
   }
   return matchType.UNKNOWN;
 }
