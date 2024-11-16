@@ -2,14 +2,21 @@ const bodyFormat = require('../enum/BodyFormat');
 const matchType = require('../enum/MatchType');
 const stringUtils = require('../utils/stringUtils');
 const search = require('./searchSvc');
+const identifierCache = require('../cache/identifierCache');
 
 async function get(word, match, fileUri) {
-  // todo: implement caching for declarations to avoid excessive duplicate searching
+  const cachedIdentifier = identifierCache.get(word, match);
+  if (cachedIdentifier) {
+    return cachedIdentifier;
+  }
+
   const result = await search.findDefinition(word, match, fileUri);
   if (!result) {
     return null;
   }
-  return parseDefinitionResult(word, match, result.text, result.location, result.desc);
+  const identifier = parseDefinitionResult(word, match, result.text, result.location, result.desc);
+  identifierCache.put(word, match, identifier);
+  return identifier;
 }
 
 function parseDefinitionResult(word, match, text, location, desc) {
