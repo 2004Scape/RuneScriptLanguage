@@ -54,7 +54,7 @@ configDuplicates.forEach(dupeDef => {
 });
 
 function build(match, declaration) {
-  return {match: match, declaration};
+  return {match: match, declaration: declaration};
 }
 
 module.exports = runescriptTrigger;
