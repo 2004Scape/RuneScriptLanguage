@@ -3,6 +3,7 @@ const stringUtils = require("../utils/stringUtils");
 const { commands } = require("../resource/engineCommands");
 const identifierSvc = require('../service/identifierSvc');
 const runescriptTrigger = require("../resource/triggers");
+const { configTags, regexTags } = require("../resource/configTags");
 
 const matchWord = async (document, position) => {
   const wordRange = document.getWordRangeAtPosition(position);
@@ -31,7 +32,7 @@ const matchWord = async (document, position) => {
     case '@': match = getAtMatchType(nextChar); break;
     case '~': match = reference(matchType.PROC); break;
     case '$': match = getLocalVarMatchType(prevWord); break;
-    case '=': match = getEqualsMatchType(prevWord); break;
+    case '=': match = getEqualsMatchType(prevWord, fileType); break;
     case '(': match = getParenthesisMatchType(prevWord); break;
   }
 
@@ -124,12 +125,16 @@ function getCommaMatchType(prevWord, nextChar) {
   return matchType.UNKNOWN;
 }
 
-function getEqualsMatchType(prevWord) {
-  switch (prevWord) {
-    case "param": return reference(matchType.PARAM);
-    case "table": return reference(matchType.DBTABLE);
-    case "huntmode": return reference(matchType.HUNT);
-    case "anim": case "readyanim": case "walkanim": return reference(matchType.SEQ);
+function getEqualsMatchType(prevWord, fileType) {
+  const prev = prevWord.toUpperCase();
+  const configTag = configTags[prev];
+  if (configTag) {
+    return reference(configTag.match);
+  }
+  for (let regexTag of regexTags) {
+    if (regexTag.fileTypes.includes(fileType) && regexTag.regex.test(prev)) {
+      return reference(regexTag.match);
+    }
   }
   return matchType.UNKNOWN;
 }
