@@ -10,3 +10,10 @@
 
 * Syntax highlighting for all file formats
 * Recoloring configs using a color picker
+* Goto definitions (ctrl+click)
+* Info displayed on hover
+
+#### Coming soon™
+
+* Find all references
+* Rename symbol accross files

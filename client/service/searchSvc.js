@@ -9,19 +9,19 @@ const findLocalVar = (fileText, word) => {
   return matches[matches.length - 1];
 }
 
-const findDefinition = async function(word, match, fileUri) {
+const findDeclaration = async function(word, match, fileUri) {
   if (!word || !match) return null;
 
   // If you pass in fileUri, no workspace search is performed 
   const files = (fileUri) ? [fileUri] : await vscode.workspace.findFiles(getInclusionFiles(match)) || [];
 
   let result;
-  const pattern = match.definitionFormat.replace("NAME", word);
+  const pattern = match.declarationConfig.format.replace("NAME", word);
   files.some(fileUri => {
     const fileText = fs.readFileSync(fileUri.path, "utf8");
     const index = fileText.indexOf(pattern);
     if (index >= 0) {
-      result = buildSearchResult(fileText, index, fileUri, match, match.definitionFormat.indexOf("NAME"));
+      result = buildSearchResult(fileText, index, fileUri, match, match.declarationConfig.format.indexOf("NAME"));
       return true; //short circuit at 1 result
     }
   });
@@ -30,13 +30,14 @@ const findDefinition = async function(word, match, fileUri) {
 
 function buildSearchResult(fileText, index, fileUri, match, lineIndexOffset) {
   return {
-    "desc": getDescription(fileText, index),
+    "info": getInfo(match, fileText, index),
     "text": getReturnText(match, fileText, index),
     "location": new vscode.Location(fileUri, getPosition(fileText, index, lineIndexOffset))
   }
 }
 
-function getDescription(fileText, index) {
+function getInfo(match, fileText, index) {
+  if (!match.searchForInfo) return '';
   const prevLine = stringUtils.getPreviousLine(fileText.substring(0, index));
   let descIndex = prevLine.indexOf('desc:');
   descIndex = descIndex > 0 ? descIndex : prevLine.indexOf('info:');
@@ -62,13 +63,13 @@ function getPosition(fileText, index, lineIndexOffset) {
 
 function getInclusionFiles(match) {
   if (!match) return null;
-  if (match.definitionFile) { // If matchType has a definitionFile defined, only that file will be searched for
-    return `**/${match.definitionFile}`;
+  if (match.declarationConfig.file) { // If matchType has a definitionFile defined, only that file will be searched for
+    return `**/${match.declarationConfig.file}`;
   } else {
     let inclusionsArr = []; // Otherwise, will serach all file types as defined by matchType.definitionFiles 
-    match.definitionFiles.forEach(fileType => inclusionsArr.push(`**/*.${fileType}`));
+    match.declarationConfig.fileTypes.forEach(fileType => inclusionsArr.push(`**/*.${fileType}`));
     return `{${inclusionsArr.join(",")}}`;
   }
 }
 
-module.exports = { findLocalVar, findDefinition, getInclusionFiles };
+module.exports = { findLocalVar, findDeclaration, getInclusionFiles };

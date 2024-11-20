@@ -1,6 +1,8 @@
 const https = require("https");
+const vscode = require('vscode');
 const stringUtils = require('../utils/stringUtils');
-const identifierSvc = require('../service/identifierSvc');
+const identifierFactory = require('./identifierFactory');
+const matchType = require('./matchType');
 
 const remoteEngineFileUrl = "https://raw.githubusercontent.com/2004Scape/Server/refs/heads/main/data/src/scripts/engine.rs2";
 
@@ -19,6 +21,7 @@ function updateCommands() {
       clearCommands();
       let type;
       let description = '';
+      let lineNum = 0;
       const lines = stringUtils.getLines(fileText);
       for (const line of lines) {
         switch (getLineType(line)) {
@@ -26,13 +29,14 @@ function updateCommands() {
             type = parseType(line); 
             break;
           case lineType.COMMAND: 
-            parseCommand(line, type, description); 
+            parseCommand(line, type, description, lineNum); 
             description = '';
             break;
           case lineType.DESCRIPTION: 
             description = line.substring(descriptionPrefix.length).toLowerCase(); 
             break;
         }
+        lineNum++;
       }
     });
   });
@@ -53,14 +57,17 @@ function parseType(line) {
   return `${line.substring(3, line.indexOf("ops") - 1).split(" ").map(word => word.toLowerCase()).join(" ")} command`;
 }
 
-function parseCommand(line, type, description) {
-  // Parse command name
+function parseCommand(line, type, description, lineNum) {
   const command = line.substring(commandPrefix.length, line.indexOf(']'));
   if (command.startsWith('.')) return; // ignore these commands since params are always the same
-  
-  const { params, returns } = identifierSvc.parseSignature(line);
-
-  commands[command] = identifierSvc.build(command, null, params, returns, description, type, null);
+  commands[command] = { ...identifierFactory.build(`${command} (${type})`, matchType.COMMAND, null, description, line), line: lineNum };
 }
 
-module.exports = { commands, updateCommands };
+function addLocation(uri) {
+  const index = commandPrefix.length;
+  Object.keys(commands).forEach(key => {
+    commands[key].location = new vscode.Location(uri, new vscode.Position(commands[key].line, index));
+  });
+}
+
+module.exports = { commands, updateCommands, addLocation };

@@ -1,18 +1,17 @@
-const endOfLineRegex = /\r\n|\r|\n/;
-// finds first blank line, comment line, line starting with '[', or line starting with "val=" (special case for enums)
-const endOfBlockRegex = /[\r\n|\r|\n](\s*|\/\/.+|\[.+|val=.+)[\r\n|\r|\n]/; 
+const vscode = require('vscode');
+const { END_OF_LINE, END_OF_BLOCK } = require('../enum/regex');
 
 const getLineText = function(input) {
-  const endOfLine = endOfLineRegex.exec(input);
+  const endOfLine = END_OF_LINE.exec(input);
   return !endOfLine ? input : input.substring(0, endOfLine.index);
 }
 
 const getLines = function(input) {
-  return input.split(endOfLineRegex);
+  return input.split(END_OF_LINE);
 }
 
 const skipFirstLine = function(input) {
-  const endOfLine = endOfLineRegex.exec(input);
+  const endOfLine = END_OF_LINE.exec(input);
   return !endOfLine ? input : input.substring(endOfLine.index + 1);
 }
 
@@ -21,18 +20,9 @@ const getPreviousLine = function(str) {
   return lines[lines.length - 2] || '';
 }
 
-const getBlockText = function(input, match) {
-  const endOfBlock = endOfBlockRegex.exec(input);
-  let block = !endOfBlock ? input : input.substring(0, endOfBlock.index);
-  if (match && match.blockInclusionData.length > 0 && block.length > 0) {
-    const blockLines = getLines(block);
-    block = blockLines[0];
-    for (let i = 1; i < blockLines.length; i++) {
-      const include = match.blockInclusionData.some(dataTagToInclude => blockLines[i].startsWith(dataTagToInclude));
-      if (include) block += `\n${blockLines[i]}`;
-    }
-  }
-  return block;
+const getBlockText = function(input) {
+  const endOfBlock = END_OF_BLOCK.exec(input);
+  return !endOfBlock ? input : input.substring(0, endOfBlock.index);
 }
 
 const nthIndexOf = function(input, pattern, n) {
@@ -54,4 +44,12 @@ const truncateMatchingParenthesis = function(str) {
   return (truncateIndex > 0) ? str.substring(truncateIndex + 1) : str;
 }
 
-module.exports = { getLineText, getLines, skipFirstLine, getPreviousLine, getBlockText, nthIndexOf, truncateMatchingParenthesis };
+function createSearchableString(linkableText, query, filesToInclude, isRegex=false) {
+  const searchOptions = JSON.stringify({ query: query, filesToInclude: filesToInclude, isRegex: isRegex});
+  return `[${linkableText}](${vscode.Uri.parse(`command:workbench.action.findInFiles?${encodeURIComponent(searchOptions)}`)})`;
+}
+
+module.exports = { 
+  getLineText, getLines, skipFirstLine, getPreviousLine, getBlockText, nthIndexOf, 
+  truncateMatchingParenthesis, createSearchableString 
+};

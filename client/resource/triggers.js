@@ -1,4 +1,4 @@
-const matchType = require("../enum/MatchType");
+const matchType = require("./matchType");
 
 const runescriptTrigger = {
   PROC: build(matchType.PROC, true),
