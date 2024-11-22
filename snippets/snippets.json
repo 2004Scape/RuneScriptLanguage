@@ -25,26 +25,13 @@
     },
     "Object Box": {
         "prefix": "objbox",
-        "body": "~objbox(${1:item_name}, \"${2:text}\");",
+        "body": "~objbox(${1:item_name}, \"${2:text}\", 250, 0, divide(^objbox_height, 2));",
         "scope": "runescript",
         "description": "A shortcut for a message interface with an item in the chatbox."
     },
-    "Object Box Top": {
-        "prefix": "objboxt",
-        "body": "~objboxt(${1:item_name}, \"${2:text}\");",
-        "scope": "runescript",
-        "description": "A shortcut for a message interface with an item aligned to the top in the chatbox."
-    },
-    "Object Box Bottom": {
-        "prefix": "objboxb",
-        "body": "~objboxb(${1:item_name}, \"${2:text}\");",
-        "scope": "runescript",
-        "description": "A shortcut for a message interface with an item aligned to the bottom in the chatbox."
-    },
-    ,
     "Double Object Box": {
         "prefix": "doubleobjbox",
-        "body": "~doubleobjbox(${1:item_name}, ${2:item_name}, \"${3:text}\");",
+        "body": "~doubleobjbox(${1:item_name}, ${2:item_name}, \"${3:text}\", 150);",
         "scope": "runescript",
         "description": "A shortcut for a message interface with two items in the chatbox."
     },
