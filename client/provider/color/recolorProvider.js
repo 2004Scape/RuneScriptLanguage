@@ -1,3 +1,5 @@
+const vscode = require('vscode');
+
 const recolProvider = {
   provideColorPresentations(color, context, token) {
     const r = Math.round(color.red * 31);
