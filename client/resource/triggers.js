@@ -37,8 +37,8 @@ const configDuplicates = [
   {startsWith: 'AI_OPLOC', upToNum: 5, includeU: true, includeT: true, includeD: false, defaultMatch: matchType.LOC},
   {startsWith: 'OPPLAYER', upToNum: 5, includeU: true, includeT: true, includeD: false, defaultMatch: matchType.UNKNOWN},
   {startsWith: 'APPLAYER', upToNum: 5, includeU: true, includeT: true, includeD: false, defaultMatch: matchType.UNKNOWN},
-  {startsWith: 'AI_APPLAYER', upToNum: 5, includeU: true, includeT: true, includeD: false, defaultMatch: matchType.UNKNOWN},
-  {startsWith: 'AI_OPPLAYER', upToNum: 5, includeU: true, includeT: true, includeD: false, defaultMatch: matchType.UNKNOWN},
+  {startsWith: 'AI_APPLAYER', upToNum: 5, includeU: true, includeT: true, includeD: false, defaultMatch: matchType.NPC},
+  {startsWith: 'AI_OPPLAYER', upToNum: 5, includeU: true, includeT: true, includeD: false, defaultMatch: matchType.NPC},
   {startsWith: 'AI_QUEUE', upToNum: 20, includeU: false, includeT: false, defaultMatch: matchType.NPC},
   {startsWith: 'OPHELD', upToNum: 5, includeU: true, includeT: true, includeD: false, defaultMatch: matchType.OBJ},
   {startsWith: 'INV_BUTTON', upToNum: 5, includeU: false, includeT: false, includeD: true, defaultMatch: matchType.INTERFACE},
@@ -54,7 +54,7 @@ configDuplicates.forEach(dupeDef => {
 });
 
 function build(match, declaration) {
-  return {match: match, declaration};
+  return {match: match, declaration: declaration};
 }
 
 module.exports = runescriptTrigger;
