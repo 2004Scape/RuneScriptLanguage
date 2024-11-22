@@ -178,9 +178,8 @@ async function matchParameter(word, line, index) {
 
   let identifier;
   if (name === 'queue') {
-    if (paramIndex < 2) {
-      return matchType.UNKNOWN;
-    }
+    if (paramIndex === 0) return reference(matchType.QUEUE);
+    if (paramIndex === 1) return matchType.UNKNOWN;
     identifier = await identifierSvc.get(line.substring(openingIndex + 1, line.indexOf(',')), matchType.QUEUE);
   } else if (name.startsWith('@')) {
     identifier = await identifierSvc.get(name.substring(1), matchType.LABEL);

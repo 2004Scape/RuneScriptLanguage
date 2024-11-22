@@ -2,7 +2,7 @@
 // postProcessors must be a function which takes indentifier as an input, and directly modifies that identifier as necessary 
 
 const queuePostProcessor = function(identifier) {
-  identifier.params.unshift({}, {}); // Custom queue params start at index 2
+  identifier.signature.params.unshift({}, {}); // Custom queue params start at index 2
 }
 
 const coordPostProcessor = function(identifier) {

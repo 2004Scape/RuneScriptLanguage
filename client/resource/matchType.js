@@ -1,5 +1,4 @@
 const { VALUE, SIGNATURE, CODEBLOCK, TITLE, INFO } = require("../enum/hoverDisplay");
-const responseText = require("../enum/responseText");
 const { option } = require('./displayConfig');
 const postProcessors = require('./postProcessors');
 
@@ -169,23 +168,9 @@ const matchType = {
   },
 };
 
-for (const [key, value] of Object.entries(matchType)) {
-  processAdditionalInfo(value);
-}
-
 function config(format, fileTypesToSearch, hoverDisplayItems=[], fileToSearch=null) {
   // Only define fileToSearch if ALL declarations are found in that file (ex: ALL commands defined in engine.rs2)
   return {format: format, fileTypes: fileTypesToSearch, displayItems: hoverDisplayItems, file: fileToSearch};
 }
-
-function processAdditionalInfo(type) {
-  if (!type.declarationConfig || !type.referenceConfig) return;
-  const allDisplayItems = type.declarationConfig.displayItems.concat(type.referenceConfig.displayItems);
-  type.searchForInfo = allDisplayItems.includes(INFO);
-  type.responseText = responseText.NONE;
-  if (allDisplayItems.includes(SIGNATURE)) type.responseText = responseText.LINE;
-  if (allDisplayItems.includes(CODEBLOCK)) type.responseText = responseText.BLOCK;
-}
-
 
 module.exports = matchType;

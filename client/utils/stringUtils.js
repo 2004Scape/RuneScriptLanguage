@@ -15,11 +15,6 @@ const skipFirstLine = function(input) {
   return !endOfLine ? input : input.substring(endOfLine.index + 1);
 }
 
-const getPreviousLine = function(str) {
-  const lines = getLines(str);
-  return lines[lines.length - 2] || '';
-}
-
 const getBlockText = function(input) {
   const endOfBlock = END_OF_BLOCK.exec(input);
   return !endOfBlock ? input : input.substring(0, endOfBlock.index);
@@ -50,6 +45,5 @@ function createSearchableString(linkableText, query, filesToInclude, isRegex=fal
 }
 
 module.exports = { 
-  getLineText, getLines, skipFirstLine, getPreviousLine, getBlockText, nthIndexOf, 
-  truncateMatchingParenthesis, createSearchableString 
+  getLineText, getLines, skipFirstLine, getBlockText, nthIndexOf, truncateMatchingParenthesis, createSearchableString 
 };
