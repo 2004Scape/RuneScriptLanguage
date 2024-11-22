@@ -1,8 +1,11 @@
-const matchType = require("../enum/MatchType");
+const matchType = require("../resource/matchType");
 const stringUtils = require("../utils/stringUtils");
 const { commands } = require("../resource/engineCommands");
 const identifierSvc = require('../service/identifierSvc');
 const runescriptTrigger = require("../resource/triggers");
+const { configTags, regexTags } = require("../resource/configTags");
+const { COORD } = require("../enum/regex");
+
 
 const matchWord = async (document, position) => {
   const wordRange = document.getWordRangeAtPosition(position);
@@ -21,18 +24,25 @@ const matchWord = async (document, position) => {
   const prevChar = wordRange.start.character > 0 ? lineText.charAt(wordRange.start.character - 1) : '';
   const nextChar = lineText.charAt(wordRange.end.character);
 
-  // try to find a match based on the character proceeding the word
   let match = matchType.UNKNOWN;
-  switch (prevChar) {
-    case '[': match = getOpenBracketMatchType(fileType); break;
-    case ',': match = getCommaMatchType(prevWord, nextChar); break;
-    case '^': match = getConstantMatchType(fileType); break;
-    case '%': match = reference(matchType.GLOBAL_VAR); break;
-    case '@': match = getAtMatchType(nextChar); break;
-    case '~': match = reference(matchType.PROC); break;
-    case '$': match = getLocalVarMatchType(prevWord); break;
-    case '=': match = getEqualsMatchType(prevWord); break;
-    case '(': match = getParenthesisMatchType(prevWord); break;
+
+  // check if word is coordinates
+  if (COORD.test(word)) {
+    match = reference(matchType.COORDINATES);
+  }
+
+  // try to find a match based on the character proceeding the word
+  if (match.id === matchType.UNKNOWN.id) {
+    switch (prevChar) {
+      case '[': match = getOpenBracketMatchType(fileType); break;
+      case ',': match = getCommaMatchType(prevWord, nextChar); break;
+      case '^': match = getConstantMatchType(fileType); break;
+      case '%': match = reference(matchType.GLOBAL_VAR); break;
+      case '@': match = getAtMatchType(nextChar); break;
+      case '~': match = reference(matchType.PROC); break;
+      case '$': match = getLocalVarMatchType(prevWord); break;
+      case '=': match = getEqualsMatchType(prevWord, fileType); break;
+    }
   }
 
   // try to find a match in the list of command names
@@ -124,19 +134,16 @@ function getCommaMatchType(prevWord, nextChar) {
   return matchType.UNKNOWN;
 }
 
-function getEqualsMatchType(prevWord) {
-  switch (prevWord) {
-    case "param": return reference(matchType.PARAM);
-    case "table": return reference(matchType.DBTABLE);
-    case "huntmode": return reference(matchType.HUNT);
-    case "anim": case "readyanim": case "walkanim": return reference(matchType.SEQ);
+function getEqualsMatchType(prevWord, fileType) {
+  const prev = prevWord.toUpperCase();
+  const configTag = configTags[prev];
+  if (configTag) {
+    return reference(configTag.match);
   }
-  return matchType.UNKNOWN;
-}
-
-function getParenthesisMatchType(prevWord) {
-  switch (prevWord) {
-    case "queue": return reference(matchType.QUEUE);
+  for (let regexTag of regexTags) {
+    if (regexTag.fileTypes.includes(fileType) && regexTag.regex.test(prev)) {
+      return reference(regexTag.match);
+    }
   }
   return matchType.UNKNOWN;
 }
@@ -171,9 +178,8 @@ async function matchParameter(word, line, index) {
 
   let identifier;
   if (name === 'queue') {
-    if (paramIndex < 2) {
-      return matchType.UNKNOWN;
-    }
+    if (paramIndex === 0) return reference(matchType.QUEUE);
+    if (paramIndex === 1) return matchType.UNKNOWN;
     identifier = await identifierSvc.get(line.substring(openingIndex + 1, line.indexOf(',')), matchType.QUEUE);
   } else if (name.startsWith('@')) {
     identifier = await identifierSvc.get(name.substring(1), matchType.LABEL);
@@ -182,10 +188,10 @@ async function matchParameter(word, line, index) {
   } else {
     identifier = commands[name];
   }
-  if (!identifier || !identifier.params || identifier.params.length <= paramIndex) {
+  if (!identifier || !identifier.signature || identifier.signature.params.length <= paramIndex) {
     return matchType.UNKNOWN;
   }
-  return identifier.params[paramIndex].matchType;
+  return reference(matchType[identifier.signature.params[paramIndex].matchTypeId]);
 }
 
 function reference(type) {
