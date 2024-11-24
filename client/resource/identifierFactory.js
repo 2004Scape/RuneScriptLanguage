@@ -1,7 +1,7 @@
 const stringUtils = require('../utils/stringUtils');
 const hoverDisplay = require('../enum/hoverDisplay');
 const displayConfig = require('./displayConfig');
-const matchType = require('./matchType');
+const dataTypeToMatchId = require('./dataTypeToMatchId');
 
 function build(name, match, location, info, text) {
   const identifier = {
@@ -13,6 +13,7 @@ function build(name, match, location, info, text) {
     text: text || ''
   }
   if (info) identifier.info = info;
+  addExtraData(identifier, match.extraData);
   process(identifier);
   return identifier;
 }
@@ -37,7 +38,10 @@ function process(identifier) {
     identifier.match.postProcessor(identifier);
   }
 
-  delete identifier.text; // no longer need to keep the raw text, save on cache size
+  // Cleanup now unneeded data to reduce identifier size
+  identifier.matchId = identifier.match.id;
+  delete identifier.match;
+  delete identifier.text;
 }
 
 function processSignature(identifier) {
@@ -53,8 +57,7 @@ function processSignature(identifier) {
       if (param.startsWith(' ')) param = param.substring(1);
       const split = param.split(' ');
       if (split.length === 2) {
-        const match = Object.keys(matchType).filter(key => (matchType[key].types || []).includes(split[0]));
-        params.push({type: split[0], name: split[1], matchTypeId: match.length > 0 ? match[0] : matchType.UNKNOWN.id});
+        params.push({type: split[0], name: split[1], matchTypeId: dataTypeToMatchId(split[0])});
       }
     });
   }
@@ -85,6 +88,12 @@ function processCodeBlock(identifier) {
     blockInclusionLines.push(currentLine);
   }
   identifier.block = blockInclusionLines.join('\n');
+}
+
+function addExtraData(identifier, extraData) {
+  if (!extraData) return;
+  if (!identifier.extraData) identifier.extraData = {};
+  Object.keys(extraData).forEach(key => identifier.extraData[key] = extraData[key]);
 }
 
 module.exports = { build };

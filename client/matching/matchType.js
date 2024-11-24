@@ -1,15 +1,20 @@
+const postProcessors = require('../resource/postProcessors');
 const { VALUE, SIGNATURE, CODEBLOCK, TITLE, INFO } = require("../enum/hoverDisplay");
-const { option } = require('./displayConfig');
-const postProcessors = require('./postProcessors');
+const { option } = require('../resource/displayConfig');
 
-// Match types define the possible types of identifiers that can be found. The config for a match type tells the extension 
-// all the necessary data it needs for finding declarations, building hover texts, and finding references.
-//
-// id, types[], displayConfig{}, declarationConfig{}, referenceConfig{} are required
-// postProcessor is optional, if an identifier with this matchType requires any special post processing, this can be added
-
+/* 
+Match types define the possible types of identifiers that can be found. The config for a match type tells the extension 
+all the necessary data it needs for finding declarations, building hover texts, and finding references.
+{
+  id: String - the unique id for the matchType,
+  types: String[] - the type keywords which map to this matchType, for example: [namedobj, obj] for OBJ
+  displayConfig: Object - Config options to modify the hover display for this matchType, options in displayConfig.js
+  declarationConfig: Object - Configuration details for declarations (what file types to search to find declaration, what string format the declarations are in, what type of display items to show on hover)
+  referenceConfig: Object - Configuration details for references (same config fields as declarationConfig),
+  postProcessor: Function(identifier) - An optional post processing function to apply for this matchType, see postProcessors.js
+}
+*/
 const matchType = {
-  UNKNOWN: {id: 'UNKNOWN'},
   LOCAL_VAR: {
     id: 'LOCAL_VAR', types: [], 
     displayConfig: {},
@@ -105,7 +110,8 @@ const matchType = {
     id: 'ENUM', types: ['enum'], 
     displayConfig: {[option.LANGUAGE]: 'enumconfig', [option.CONFIG_INCLUSIONS]: ['inputtype', 'outputtype']},
     declarationConfig: config('[NAME]', ['enum'], [TITLE]),
-    referenceConfig: config('NAME', ['rs2'], [TITLE, INFO, CODEBLOCK])
+    referenceConfig: config('NAME', ['rs2'], [TITLE, INFO, CODEBLOCK]),
+    postProcessor: postProcessors.enumPostProcessor
   },
   DBROW: {
     id: 'DBROW', types: ['dbrow'], 
@@ -129,7 +135,8 @@ const matchType = {
     id: 'PARAM', types: ['param'], 
     displayConfig: {[option.LANGUAGE]: 'paramconfig'},
     declarationConfig: config('[NAME]', ['param'], [TITLE]),
-    referenceConfig: config('NAME', ['rs2', 'loc', 'npc', 'hunt', 'struct', 'obj'], [TITLE, INFO, CODEBLOCK])
+    referenceConfig: config('NAME', ['rs2', 'loc', 'npc', 'hunt', 'struct', 'obj'], [TITLE, INFO, CODEBLOCK]),
+    postProcessor: postProcessors.paramPostProcessor
   },
   COMMAND: {
     id: 'COMMAND', types: [], 
@@ -161,11 +168,44 @@ const matchType = {
     declarationConfig: config('[NAME]', ['mesanim'], [TITLE]),
     referenceConfig: config('<p,NAME>', ['rs2'], [TITLE, INFO])
   },
+  STRUCT: {
+    id: 'STRUCT', types: ['struct'],
+    displayConfig: {[option.LANGUAGE]: 'structconfig'},
+    declarationConfig: config('[NAME]', ['struct'], [TITLE]),
+    referenceConfig: config('NAME', ['rs2', 'obj', 'npc', 'enum', 'inv', 'dbrow', 'param', 'hunt'], [TITLE, INFO])
+  },
+  // Hover only match types that are only used for displaying hover displays (no finding references/declarations)
+  // Useful for terminating word searches early when detected. Postprocessing can be done on these.
+  // Specify referenceConfig to select which displayItems should be shown on hover.
   COORDINATES: {
-    id: 'COORDINATES', types: [], hoverOnly: true, 
+    id: 'COORDINATES', types: [], hoverOnly: true,
     referenceConfig: config(null, null, [TITLE, VALUE]),
     postProcessor: postProcessors.coordPostProcessor
   },
+  CONFIG_KEY: {
+    id: 'CONFIG_KEY', types: [], hoverOnly: true,
+    referenceConfig: config(null, null, [TITLE, INFO]),
+    postProcessor: postProcessors.configKeyPostProcessor
+  },
+  TRIGGER: {
+    id: 'TRIGGER', types: [], hoverOnly: true,
+    referenceConfig: config(null, null, [TITLE, INFO]),
+    postProcessor: postProcessors.triggerPostProcessor
+  },
+  STAT: { 
+    id: 'STAT', types: ['stat'], hoverOnly: true,
+    referenceConfig: config(null, null, [TITLE])
+  },
+  CATEGORY_TRIGGER: {
+    id: 'CATEGORY_TRIGGER', types: [], hoverOnly: true,
+    declarationConfig: config(null, null, [TITLE, VALUE]),
+    postProcessor: postProcessors.categoryTriggerPostProcessor
+  },
+  // NOOP Match types that might get detected, but nothing is done with them (no hover display, no finding references/declarations)
+  // Useful for terminating word searching early when detected, and possibly doing something with them at a later date
+  UNKNOWN: { id: 'UNKNOWN', noop: true }, // default to map to when a value is matched but no specific matchType for it
+  COLOR: { id: 'COLOR', noop: true },
+  NUMBER: { id: 'NUMBER', noop: true }
 };
 
 function config(format, fileTypesToSearch, hoverDisplayItems=[], fileToSearch=null) {
