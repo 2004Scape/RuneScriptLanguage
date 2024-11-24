@@ -111,7 +111,7 @@
                 },
                 {
                     "name": "variable.language.runescript",
-                    "match": "null"
+                    "match": "\\bnull\\b"
                 }
             ]
         },
