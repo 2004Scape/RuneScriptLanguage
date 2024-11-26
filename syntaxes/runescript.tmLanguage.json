@@ -135,9 +135,28 @@
                     "match": "\\\\."
                 },
                 {
-                    "comment": "Highlight occurences of <> inside strings.",
+                    "include": "#interpolation"
+                }
+            ]
+        },
+        "interpolation": {
+            "begin": "<",
+            "end": ">",
+            "name": "entity.name.function.runescript",
+            "patterns": [
+                {
+                    "comment": "mesanim definitions in strings",
                     "name": "entity.name.function.runescript",
-                    "match": "\\<([^\\<]+)\\>"
+                    "match": "p,\\w+"
+                },
+                {
+                    "comment": "Default coloring for closing pairs",
+                    "name": "meta.embedded",
+                    "match": "[(){}\\.,]"
+                },
+                {
+                    "comment": "Use this (runescript) tmlanguage definition for code in the <> blocks in strings",
+                    "include": "$self"
                 }
             ]
         }
