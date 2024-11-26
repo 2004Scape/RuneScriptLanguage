@@ -9,10 +9,10 @@
             "include": "#variables"
         },
         {
-            "include": "#triggers"
+            "include": "#keywords"
         },
         {
-            "include": "#keywords"
+            "include": "#triggers"
         },
         {
             "include": "#strings"
@@ -46,7 +46,7 @@
                 },
                 {
                     "comment": "Constants",
-                    "name": "constant.language.runescript",
+                    "name": "variable.other.enummember.runescript",
                     "match": "\\^\\w+"
                 },
                 {
@@ -66,30 +66,6 @@
                 }
             ]
         },
-        "triggers": {
-            "patterns": [
-                {
-                    "comment": "Proc/label references",
-                    "name": "entity.name.function.runescript",
-                    "match": "[~@]\\w+"
-                },
-                {
-                    "comment": "Function parameters. This matches commands and types currently... todo: fix",
-                    "name": "variable.language.runescript",
-                    "match": "\\b((int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|char|dbcolumn|proc|label))\\b"
-                },
-                {
-                    "comment": "Highlight the first half of [trigger,subject] blue",
-                    "name": "variable.language.runescript",
-                    "match": "\\[\\w+(?=,)"
-                },
-                {
-                    "comment": "Highlight the second half of [trigger,subject] yellow",
-                    "name": "entity.name.function.runescript",
-                    "match": "(?<=,)\\w+\\]"
-                }
-            ]
-        },
         "keywords": {
             "patterns": [
                 {
@@ -103,6 +79,49 @@
                 {
                     "name": "variable.language.runescript",
                     "match": "\\b(def_(int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|stat|npc_stat|fontmetrics|enum|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|coord|mesanim|param|queue|weakqueue|timer|softtimer|char|dbcolumn|proc|label))\\b"
+                },
+                {
+                    "name": "variable.language.runescript",
+                    "match": "\\bnull\\b"
+                }
+            ]
+        },
+        "triggers": {
+            "patterns": [
+                {
+                    "comment": "Proc/label references",
+                    "name": "entity.name.function.runescript",
+                    "match": "[~@](\\.)?\\w+"
+                },
+                {
+                    "comment": "Highlight the first half of [trigger,subject] blue",
+                    "name": "variable.language.runescript",
+                    "match": "\\[\\w+(?=,)"
+                },
+                {
+                    "comment": "Highlight the second half of [trigger,subject] yellow",
+                    "name": "entity.name.function.runescript",
+                    "match": "(?<=,)(\\.)?\\w+\\]"
+                },
+                {
+                    "comment": "Engine commands that are also function parameters. todo... figure out coord, it is the only exception because it doesn't take parameters",
+                    "name": "entity.name.function.runescript",
+                    "match": "\\b(queue|walktrigger|enum|softtimer|stat)\\("
+                },
+                {
+                    "comment": "Function parameters",
+                    "name": "variable.language.runescript",
+                    "match": "\\b((coord|queue|walktrigger|enum|softtimer|stat|int|string|boolean|seq|locshape|component|idk|midi|npc_mode|namedobj|synth|npc_stat|fontmetrics|loc|model|npc|obj|player_uid|spotanim|npc_uid|inv|category|struct|dbrow|interface|dbtable|mesanim|param|char|dbcolumn|proc|label|timer|idkit|hunt))\\b"
+                },
+                {
+                    "comment": "Engine commands",
+                    "name": "entity.name.function.runescript",
+                    "match": "\\b(\\.)?(coord|queue|walktrigger|enum|softtimer|stat|calc|gosub|jump|map_clock|map_members|map_playercount|huntall|huntnext|npc_huntall|npc_huntnext|inzone|lineofwalk|stat_random|spotanim_map|distance|movecoord|seqlength|split_init|split_pagecount|split_get|split_linecount|split_getanim|struct_param|coordx|coordy|coordz|playercount|map_blocked|map_indoors|lineofsight|world_delay|projanim_pl|projanim_npc|projanim_map|map_locaddunsafe|npccount|zonecount|loccount|objcount|map_findsquare|map_multiway|finduid|p_finduid|strongqueue|weakqueue|anim|buffer_full|buildappearance|cam_moveto|cam_lookat|cam_shake|cam_reset|displayname|facesquare|healenergy|if_close|last_com|last_int|last_item|last_slot|last_useitem|last_useslot|mes|name|p_aprange|p_arrivedelay|p_countdialog|p_delay|p_opheld|p_oploc|p_opnpc|p_opnpct|p_pausebutton|p_stopaction|p_telejump|p_walk|say|sound_synth|staffmodlevel|stat_base|stat_add|stat_sub|stat_heal|uid|p_logout|if_setcolour|if_openchat|if_openmain_side|if_sethide|if_setobject|if_setmodel|if_setrecol|tut_open|tut_close|tut_flash|if_setanim|if_settab|if_settabactive|if_openmain|if_openside|if_setplayerhead|if_settext|if_setnpchead|if_setposition|stat_advance|damage|if_setresumebuttons|text_gender|midi_song|midi_jingle|hint_coord|softtimer|clearsofttimer|settimer|cleartimer|gettimer|spotanim_pl|hint_stop|p_exactmove|busy|busy2|getqueue|p_locmerge|last_login_info|p_teleport|bas_readyanim|bas_turnonspot|bas_walk_f|bas_walk_b|bas_walk_l|bas_walk_r|bas_running|gender|hint_npc|hint_player|headicons_get|headicons_set|p_opobj|p_opplayer|p_opplayert|player_findallzone|player_findnext|allowdesign|last_targetslot|getwalktrigger|clearqueue|afk_event|lowmemory|setidkit|findhero|both_heropoints|setgender|setskincolour|p_animprotect|runenergy|weight|p_clearpendingaction|npc_finduid|npc_add|npc_anim|npc_category|npc_coord|npc_del|npc_delay|npc_facesquare|npc_find|npc_findall|npc_findallany|npc_findexact|npc_findhero|npc_param|npc_queue|npc_range|npc_say|npc_sethunt|npc_sethuntmode|npc_setmode|npc_basestat|npc_stat|npc_statadd|npc_statheal|npc_statsub|npc_type|npc_damage|npc_name|npc_uid|npc_settimer|spotanim_npc|npc_findallzone|npc_findnext|npc_tele|npc_changetype|npc_getmode|npc_heropoints|npc_walktrigger|npc_walk|npc_attackrange|npc_arrivedelay|npc_hasop|loc_add|loc_angle|loc_anim|loc_category|loc_change|loc_coord|loc_del|loc_find|loc_findallzone|loc_findnext|loc_param|loc_type|loc_name|loc_shape|obj_add|obj_addall|obj_param|obj_name|obj_del|obj_count|obj_type|obj_takeitem|obj_coord|obj_find|nc_name|nc_param|nc_category|nc_desc|nc_debugname|nc_op|lc_name|lc_param|lc_category|lc_desc|lc_debugname|lc_width|lc_length|oc_name|oc_param|oc_category|oc_desc|oc_members|oc_weight|oc_wearpos|oc_wearpos2|oc_wearpos3|oc_cost|oc_tradeable|oc_debugname|oc_cert|oc_uncert|oc_stackable|inv_allstock|inv_size|inv_stockbase|inv_add|inv_changeslot|inv_clear|inv_del|inv_delslot|inv_dropitem|inv_dropslot|inv_freespace|inv_getnum|inv_getobj|inv_itemspace|inv_itemspace2|inv_movefromslot|inv_movetoslot|both_moveinv|inv_moveitem|inv_moveitem_cert|inv_moveitem_uncert|inv_setslot|inv_total|inv_totalcat|inv_transmit|invother_transmit|inv_stoptransmit|both_dropslot|inv_dropall|enum_getoutputcount|append_num|append|append_signnum|lowercase|tostring|compare|append_char|string_length|substring|string_indexof_char|string_indexof_string|add|sub|multiply|divide|random|randominc|interpolate|addpercent|setbit|testbit|modulo|pow|invpow|and|or|max|min|scale|bitcount|togglebit|clearbit|setbit_range|clearbit_range|getbit_range|setbit_range_toint|sin_deg|cos_deg|atan2_deg|abs|db_find_with_count|db_findnext|db_getfield|db_getfieldcount|db_listall_with_count|db_getrowtable|db_findbyindex|db_find_refine_with_count|db_find|db_find_refine|db_listall|error|map_production|map_lastclock|map_lastworld|map_lastclientin|map_lastnpc|map_lastplayer|map_lastlogin|map_lastlogout|map_lastzone|map_lastclientout|map_lastcleanup|map_lastbandwidthin|map_lastbandwidthout|timespent|gettimespent)\\b"
+                },
+                {
+                    "comment": "Any other properties",
+                    "name": "variable.other.property.runescript",
+                    "match": "[\\w:]+"
                 }
             ]
         },
@@ -116,9 +135,28 @@
                     "match": "\\\\."
                 },
                 {
-                    "comment": "Highlight occurences of <> inside strings.",
+                    "include": "#interpolation"
+                }
+            ]
+        },
+        "interpolation": {
+            "begin": "<",
+            "end": ">",
+            "name": "entity.name.function.runescript",
+            "patterns": [
+                {
+                    "comment": "mesanim definitions in strings",
                     "name": "entity.name.function.runescript",
-                    "match": "\\<([^\\<]+)\\>"
+                    "match": "p,\\w+"
+                },
+                {
+                    "comment": "Default coloring for closing pairs",
+                    "name": "meta.embedded",
+                    "match": "[(){}\\.,]"
+                },
+                {
+                    "comment": "Use this (runescript) tmlanguage definition for code in the <> blocks in strings",
+                    "include": "$self"
                 }
             ]
         }
