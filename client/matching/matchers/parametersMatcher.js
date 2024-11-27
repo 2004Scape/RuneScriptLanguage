@@ -2,7 +2,6 @@ const { commands } = require('../../resource/engineCommands');
 const matchType = require('../matchType');
 const identifierSvc = require('../../service/identifierSvc');
 const { reference, getWordAtIndex } = require("../../utils/matchUtils");
-const { nthIndexOf, truncateMatchingParenthesis } = require('../../utils/stringUtils');
 
 // Looks for matches of values inside of parenthesis
 // This includes engine command parameters, proc parameters, label parameters, and queue parameters
@@ -10,12 +9,10 @@ async function parametersMatcher(context) {
   if (context.fileType !== 'rs2') {
     return null;
   }
-
   const { identifierName, paramIndex } = parseForIdentifierNameAndParamIndex(context);
   if (!identifierName) {
     return null;
   }
-
   const name = identifierName.value;
   const prev = context.line.charAt(identifierName.start - 1);
   let identifier;
