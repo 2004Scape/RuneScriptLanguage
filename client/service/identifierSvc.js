@@ -1,4 +1,4 @@
-const matchType = require('../resource/matchType');
+const matchType = require('../matching/matchType');
 const search = require('./searchSvc');
 const identifierCache = require('../cache/identifierCache');
 const engineCommands = require('../resource/engineCommands');

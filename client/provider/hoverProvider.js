@@ -1,18 +1,18 @@
 const vscode = require('vscode');
 const path = require('path');
-const matchUtils = require('../../utils/matchUtils');
-const stringUtils = require('../../utils/stringUtils');
-const searchSvc = require('../../service/searchSvc');
-const matchType = require('../../resource/matchType');
-const identifierSvc = require('../../service/identifierSvc');
-const identifierFactory = require('../../resource/identifierFactory');
-const { TITLE, INFO, VALUE, SIGNATURE, CODEBLOCK } = require('../../enum/hoverDisplay');
+const stringUtils = require('../utils/stringUtils');
+const searchSvc = require('../service/searchSvc');
+const matchType = require('../matching/matchType');
+const identifierSvc = require('../service/identifierSvc');
+const identifierFactory = require('../resource/identifierFactory');
+const { TITLE, INFO, VALUE, SIGNATURE, CODEBLOCK } = require('../enum/hoverDisplay');
+const { matchWordFromDocument } = require('../matching/matchWord');
 
 const hoverProvider = function(context) {
   return {
     async provideHover(document, position, token) {
-      const { word, match } = await matchUtils.matchWord(document, position);
-      if (!word || match.id === matchType.UNKNOWN.id) {
+      const { word, match } = await matchWordFromDocument(document, position);
+      if (!match || match.noop) {
         return null;
       }
 
@@ -41,10 +41,10 @@ const hoverProvider = function(context) {
 
       // Build hover text based on identifier data
       const identifier = await getIdentifier(word, match, document, position);
-      if (!identifier) {
+      if (!identifier || identifier.hideDisplay) {
         return null;
       }
-      appendTitle(identifier.name, identifier.fileType, identifier.match.id, content);
+      appendTitle(identifier.name, identifier.fileType, identifier.matchId, content);
       appendInfo(identifier, config.displayItems, content);
       appendValue(identifier, config.displayItems, content);
       appendSignature(identifier, config.displayItems, content);

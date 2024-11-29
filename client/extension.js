@@ -1,8 +1,8 @@
 const vscode = require('vscode');
 const engineCommands = require('./resource/engineCommands');
-const hoverProvider = require('./provider/hover/hoverProvider');
-const recolorProvider = require('./provider/color/recolorProvider');
-const definitionProvider = require('./provider/definition/gotoDefinition');
+const hoverProvider = require('./provider/hoverProvider');
+const recolorProvider = require('./provider/recolorProvider');
+const definitionProvider = require('./provider/gotoDefinition');
 const identifierCache = require('./cache/identifierCache');
 
 // Refresh engine commands once every 24 hours
